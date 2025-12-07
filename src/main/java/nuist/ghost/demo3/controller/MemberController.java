@@ -16,7 +16,8 @@ public class MemberController {
     @Autowired
     private MemberService memberService;
 
-    @GetMapping //GetMapping 注解表示该方法处理GET请求到根路径
+    @GetMapping ("/api/members")
+    //GetMapping 注解表示该方法处理GET请求到根路径
     public List<Member> getAllMembers() {
         return memberService.getAllMembers();
     }

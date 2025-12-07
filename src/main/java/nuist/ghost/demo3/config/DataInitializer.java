@@ -36,9 +36,7 @@ public class DataInitializer implements CommandLineRunner {
             return;
         }
         List<Member> members = JsonUtils.readMembersFromPath(DATAPATH);
-        System.out.println(members);
         memberRepository.saveAll(members);
-        System.out.println(memberRepository.findAll());
 
 //        RegularMember regularMember = new RegularMember("张三", "2021001");
 //        regularMember.setInterviewScore(85.0);

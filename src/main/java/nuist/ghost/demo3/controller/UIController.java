@@ -11,4 +11,9 @@ public class UIController {
     public String ui(){
         return "redirect:/ui/index.html";
     }
+
+    @GetMapping("/")
+    public String root(){
+        return "redirect:/root/index.html";
+    }
 }
