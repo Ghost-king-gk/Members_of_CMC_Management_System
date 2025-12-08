@@ -1,0 +1,119 @@
+*{ box-sizing: border-box; }
+html, body { height: 100%; }
+body{
+    background-color: #3b424c;
+    margin:0;
+    overflow:hidden; /* 禁止页面本身滚动，确保只滚侧栏 */
+}
+.page {
+    display:flex;
+    height: 100vh; /* 固定为视口高度 */
+    background: #21252b;
+}
+.sidebar{
+    width:25%;
+    height:100%;        /* 侧栏占满一屏高度 */
+    flex-shrink:0;      /* 防止侧栏被压缩 */
+    padding: 12px;/* 内边距 */
+    overflow-y: auto; /* 垂直滚动 */
+    overscroll-behavior: contain; /* 防止滚动穿透 */
+    scroll-behavior: smooth; /* 平滑滚动 */
+}
+.content{
+    width:75%;
+    height:100%;
+    padding: 16px;/* 内边距 */
+    overflow:hidden; /* 保持右列不滚动 */
+}
+
+
+
+.sidebar__header{
+    flex: 0 0 auto;
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+.sidebar__title{
+    font-size: 24px;
+    margin-bottom: 12px;
+    color: #d4d4d4;
+}
+.sidebar__add-btn{
+    width: 100%;
+    padding: 8px 16px;
+    font-size: 16px;
+    color: #3f3f3f;
+    background-color: #bad1eb;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    
+    opacity: 0;
+    animation: buttonSlideIn 0.5s ease forwards;
+}
+
+
+
+.content__card{
+    font-size: 24px;
+    margin-bottom: 12px;
+    color: #d4d4d4;
+}
+
+
+
+.member-list{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display:grid;
+    grid-template-columns: 1fr; /* 单列布局 */
+    gap: 8px;
+}
+.member-item button{
+    width: 100%;
+    padding: 8px 12px;
+    font-size: 18px;
+    color: #ffffff;
+    background: linear-gradient(to left,
+            #4a90e2 0%,        
+            #5093df 40%,       
+            #629fe4 70%,
+            #67a0e1 85%,
+            #72a7e4 100%
+        );/*如何实现从右下到左上的渐变*/
+
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    text-align: left;
+    margin-bottom:4px;
+
+    opacity: 0;
+    animation: buttonSlideIn 0.8s ease 0.1s forwards;
+}
+.member-item button:hover{
+    background-color: #357abd;
+}
+@keyframes buttonSlideIn {
+    0% {
+        opacity: 0;
+        transform: translateX(-100px) scaleX(1);
+    }
+    
+    35% {
+        opacity: 1;
+        transform: translateX(+10px);
+    }
+    80% {
+        transform: translateX(-3px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0) scaleX(1);
+    }
+    
+}

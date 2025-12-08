@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Member Menu</title>
+    <link rel="stylesheet" href="./styles/style.css" />
+    <script type="module" src="./scripts/menu.js" defer></script>
+  </head>
+  <body>
+    <div class="page">
+      <aside class="sidebar">
+        <div class="sidebar__header">
+          <h2 class="sidebar__title">Member List</h2>
+          <button id="addMemberBtn" class="sidebar__add-btn"> ＋ Add Member</button>
+        </div>
+        <ul id="memberList" class="member-list">
+          <li class="member-item">
+            <button data-id="1">Alice</button>
+            <button data-id="2">Bob</button>
+          </li>
+        </ul>
+        
+      </aside>
+      <main id="memberContent" class="content">
+        <section class="content__card">
+          <h2>Please select a member from the left</h2>
+          <p>Member details will be displayed here (placeholder for now).</p>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
