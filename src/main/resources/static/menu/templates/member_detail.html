@@ -1,0 +1,65 @@
+<div class="member-detail">
+    <header class="member-detail__header">
+        <h1 class="member-detail__name">{{name}}</h1>
+        <div class="member-meta-row">
+            <span class="member-detail__id">ID: {{id}}</span>
+            <span class="member-detail__studentid">studentID: {{studentId}}</span>
+            <!-- 状态标签 -->
+            <span class="member-status {{statusClass}}">{{statusText}}</span>
+        </div>
+    </header>
+    
+    <div class="member-detail__grid">
+        <div class="detail-item">
+            <div class="detail-item__label">Position</div>
+            <div class="detail-item__value">{{position}}</div>
+        </div>
+        <div class="detail-item">
+            <div class="detail-item__label">phoneNumber</div>
+            <div class="detail-item__value">{{phoneNumber}}</div>
+        </div>
+        <div class="detail-item">
+            <div class="detail-item__label">Email</div>
+            <div class="detail-item__value">{{email}}</div>
+        </div>
+        <div class="detail-item">
+            <div class="detail-item__label">Join Date</div>
+            <div class="detail-item__value">{{joinDate}}</div>
+        </div>
+    </div>
+
+    <div class="member-detail__scorebars">
+        <!-- Interview Score -->
+        <div class="score-item">
+            <div class="score-header">
+                <span class="score-label">Interview Score</span>
+                <span class="score-value">{{interviewScore}} / {{interviewMax}}</span>
+            </div>
+            <div class="score-track">
+                <div class="score-fill fill-interview" style="width: {{interviewPercent}}%"></div>
+            </div>
+        </div>
+
+        <!-- Internship Score -->
+        <div class="score-item">
+            <div class="score-header">
+                <span class="score-label">Internship Score</span>
+                <span class="score-value">{{internshipScore}} points</span>
+            </div>
+            <div class="score-track">
+                <div class="score-fill fill-internship" style="width: {{internshipPercent}}%"></div>
+            </div>
+        </div>
+
+        <!-- Salary Score -->
+        <div class="score-item">
+            <div class="score-header">
+                <span class="score-label">Salary Score</span>
+                <span class="score-value">{{salaryScore}} points</span>
+            </div>
+            <div class="score-track">
+                <div class="score-fill fill-salary" style="width: {{salaryPercent}}%"></div>
+            </div>
+        </div>
+    </div>
+</div>

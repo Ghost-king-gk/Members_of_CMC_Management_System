@@ -50,7 +50,7 @@ public class MemberController {
         Member member = new Member(name, studentID){
             @Override
             public String getMemberType() {
-                return "普通成员";
+                return "RegularMember";
             }
         };
         return memberService.createMember(member);
@@ -61,7 +61,7 @@ public class MemberController {
         Member member = new Member(name, studentID){
             @Override
             public String getMemberType() {
-                return "部长";
+                return "SectionHead";
             }
         };
         return memberService.createMember(member);
@@ -73,7 +73,7 @@ public class MemberController {
         Member member = new Member(name, studentID){
             @Override
             public String getMemberType() {
-                return "主席";
+                return "President";
             }
         };
         return memberService.createMember(member);

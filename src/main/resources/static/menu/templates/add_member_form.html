@@ -1,0 +1,95 @@
+<div class="member-detail member-form-container">
+    <header class="member-detail__header">
+        <h1 class="member-detail__name">New Member</h1>
+        <div class="member-meta-row">
+            <span class="member-detail__id">ID: Auto-Generated</span>
+            <span class="member-status status-official">Draft</span>
+        </div>
+    </header>
+
+    <form id="addMemberForm" class="member-form">
+        <!-- Grid Layout for Inputs -->
+        <div class="member-detail__grid">
+            <div class="form-group">
+                <label class="detail-item__label" for="name">Full Name</label>
+                <input type="text" id="name" name="name" class="form-input" placeholder="Enter name" required>
+            </div>
+            
+            <div class="form-group">
+                <label class="detail-item__label" for="studentId">Student ID</label>
+                <input type="text" id="studentId" name="studentId" class="form-input" placeholder="Enter ID">
+            </div>
+
+            <div class="form-group">
+                <label class="detail-item__label">Position</label>
+                <!-- 隐藏的输入框，用于存储实际值，方便表单提交 -->
+                <input type="hidden" id="position" name="position" value="RegularMember">
+                
+                <!-- 自定义下拉菜单 UI -->
+                <div class="custom-select" id="customPositionSelect">
+                    <div class="select-selected">RegularMember</div>
+                    <div class="select-items select-hide">
+                        <div data-value="RegularMember">RegularMember</div>
+                        <div data-value="SectionHead">SectionHead</div>
+                        <div data-value="President">President</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="detail-item__label" for="phoneNumber">Phone</label>
+                <input type="tel" id="phoneNumber" name="phoneNumber" class="form-input" placeholder="Phone number">
+            </div>
+
+            <div class="form-group">
+                <label class="detail-item__label" for="email">Email</label>
+                <input type="email" id="email" name="email" class="form-input" placeholder="Email address">
+            </div>
+        </div>
+
+        <!-- Status Toggle Section -->
+        <div class="form-section">
+            <label class="detail-item__label" style="margin-bottom: 12px; display: block;">Membership Status</label>
+            <div class="status-toggle-group">
+                <label class="radio-label">
+                    <input type="radio" name="isProbation" value="false" checked>
+                    <span class="radio-custom status-official">Official</span>
+                </label>
+                <label class="radio-label">
+                    <input type="radio" name="isProbation" value="true">
+                    <span class="radio-custom status-intern">Intern</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Scores Section -->
+        <div class="member-detail__scorebars form-scores">
+            <div class="score-item">
+                <div class="score-header">
+                    <label class="score-label" for="interviewScore">Interview Score (0-15)</label>
+                </div>
+                <input type="number" id="interviewScore" name="interviewScore" class="form-input form-input--score" min="0" max="15" step="0.1" placeholder="0">
+            </div>
+
+            <div class="score-item">
+                <div class="score-header">
+                    <label class="score-label" for="internshipScore">Internship Score (0-20)</label>
+                </div>
+                <input type="number" id="internshipScore" name="internshipScore" class="form-input form-input--score" min="0" max="20" step="0.1" placeholder="0">
+            </div>
+
+            <div class="score-item">
+                <div class="score-header">
+                    <label class="score-label" for="salaryScore">Salary Score (0-5500)</label>
+                </div>
+                <input type="number" id="salaryScore" name="salaryScore" class="form-input form-input--score" min="0" max="5500" step="10" placeholder="0">
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="form-actions">
+            <button type="button" class="btn-cancel" onclick="document.getElementById('memberContent').innerHTML='<section class=\'content__card\'><h2>Select a member</h2></section>'">Cancel</button>
+            <button type="submit" class="btn-submit">Create Member</button>
+        </div>
+    </form>
+</div>

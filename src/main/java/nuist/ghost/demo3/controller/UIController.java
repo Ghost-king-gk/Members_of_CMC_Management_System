@@ -16,4 +16,9 @@ public class UIController {
     public String root(){
         return "redirect:/root/index.html";
     }
+
+    @GetMapping("/menu")
+    public String menu(){
+        return "redirect:/menu/index.html";
+    }
 }

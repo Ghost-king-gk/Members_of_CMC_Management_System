@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     startEl.addEventListener('click', (event) => {
         effect.playFullscreenRippleEffect(startEl, event);
         setTimeout(() => {
-            window.location.href = '/ui/index.html';
+            window.location.href = '/menu/index.html';
         }, 300); // 延迟导航以显示水波纹效果
     });
 });
