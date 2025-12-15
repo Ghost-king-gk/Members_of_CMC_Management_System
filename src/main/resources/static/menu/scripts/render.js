@@ -1,6 +1,5 @@
-// render.js
 export { renderMemberButton, renderMembersSequentially, renderMemberDetails, renderAddMemberForm };
-
+import * as api from './api.js';
 
 
 function renderMemberButton(member) {
@@ -86,7 +85,7 @@ async function renderMemberDetails(member) {
     const viewModel = {
         name: member.name,
         id: member.id,
-        studentId: member.studentID || 'studentID',
+        studentID: member.studentID || 'studentID',
         statusText: statusText, //状态文本
         statusClass: statusClass, //状态样式类
         position: member.memberType || 'Position',
@@ -115,6 +114,79 @@ async function renderMemberDetails(member) {
     });
 
     contentContainer.innerHTML = html;
+
+    // 绑定“删除”弹出框逻辑（从垃圾桶右侧冒出，不是整页弹窗）
+    const deleteWrap = contentContainer.querySelector('.member-detail__delete');
+    if (deleteWrap) {
+        const toggleBtn = deleteWrap.querySelector('[data-action="toggle-delete"]');
+        const popover = deleteWrap.querySelector('[data-role="delete-popover"]');
+        const cancelBtn = deleteWrap.querySelector('[data-action="cancel-delete"]');
+        const confirmBtn = deleteWrap.querySelector('[data-action="confirm-delete"]');
+
+        let isOpen = false;
+        let removeDocListener = null;
+
+        const open = () => {
+            if (!popover || !toggleBtn) return;
+            popover.hidden = false;
+            toggleBtn.setAttribute('aria-expanded', 'true');
+            isOpen = true;
+
+            const onDocClick = (e) => {
+                if (!deleteWrap.contains(e.target)) close();
+            };
+            document.addEventListener('click', onDocClick);
+            removeDocListener = () => document.removeEventListener('click', onDocClick);
+        };
+
+        const close = () => {
+            if (!popover || !toggleBtn) return;
+            popover.hidden = true;
+            toggleBtn.setAttribute('aria-expanded', 'false');
+            isOpen = false;
+            if (removeDocListener) {
+                removeDocListener();
+                removeDocListener = null;
+            }
+        };
+
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (isOpen) close();
+                else open();
+            });
+        }
+
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                close();
+            });
+        }
+
+        if (confirmBtn) {
+            confirmBtn.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                confirmBtn.disabled = true;
+                try {
+                    await api.fetchDeleteMember(member.id);
+                    console.log('Member has been deleted:', member.id);
+                    await fetch('/savetojson');
+
+                    refreshMemberList();
+
+                    contentContainer.innerHTML = '<section class="content__card"><h2>Member deleted</h2><p>Please select a member from the left.</p></section>';
+                } catch (err) {
+                    console.error(err);
+                    close();
+                    alert('Delete failed: ' + (err && err.message ? err.message : err));
+                } finally {
+                    confirmBtn.disabled = false;
+                }
+            });
+        }
+    }
 }
 
 
@@ -122,17 +194,26 @@ async function renderMemberDetails(member) {
 //////--------------------------添加成员表单部分的逻辑--------------------------//////
 // 缓存添加成员表单模板
 let addMemberFormTemplate = null;
-
 async function loadAddMemberFormTemplate() {
     if (addMemberFormTemplate) return addMemberFormTemplate;
     try {
         const response = await fetch('./templates/add_member_form.html');
-        if (!response.ok) throw new Error('Failed to load template');
+        if (!response.ok) throw new Error('Failed to load template of add member form');
         addMemberFormTemplate = await response.text();
         return addMemberFormTemplate;
     } catch (error) {
         console.error('Error loading template:', error);
         return '<div class="error">Error loading form template</div>';
+    }
+}
+
+async function refreshMemberList() {
+    // 刷新左侧列表（降低“删除后列表还在”的割裂感）
+    const memberList = document.getElementById('memberList');
+    if (memberList) {
+        memberList.innerHTML = '';
+        const members = await api.fetchMemberList();
+        renderMembersSequentially(members);
     }
 }
 
@@ -145,8 +226,91 @@ async function renderAddMemberForm() {
     
     // 2. 渲染 HTML
     contentContainer.innerHTML = template;
-
     
+
+    // 3. 表单验证和提交逻辑
+    const form = document.getElementById('addMemberForm');
+    const nameInput = document.getElementById('name');
+    const positionInput = document.getElementById('position');
+    // 修正：HTML中的ID是 'studentId' (小写d)，这里必须匹配
+    const studentIDInput = document.getElementById('studentID');
+    const modal = document.getElementById('validationModal');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+
+    if (form) {/////如果 form 存在，这是一种种保护措施，防止直接报错，确保下面的代码只在表单存在时执行
+        // 禁用浏览器默认验证，接管控制权
+        form.setAttribute('novalidate', true);
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault(); // 阻止默认提交
+
+            // 检查名字是否为空
+            if (!nameInput.value.trim()) {
+                // 滚动到 Name 输入框，使其可见
+                nameInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+                // 2. 添加错误样式类：这会触发 CSS 中的 border 变红和 shake 动画
+                nameInput.classList.add('input-error');
+
+                // 3. 关键点2：设置定时器移除样式类
+                // 这里的 1000ms 必须与 CSS 中的 animation: 1s 保持一致
+                // 只有移除了类，下次点击时再次添加类，动画才会重新播放
+                setTimeout(() => nameInput.classList.remove('input-error'), 1000);
+            } else {
+                // 构造数据对象：键名必须与后端期望的参数名一致
+                // 后端期望: ?name=...&studentID=...
+                const memberData = {
+                    name: nameInput.value.trim(),
+                    // 注意：这里左边的 key 'studentID' 是发给后端的参数名
+                    // 右边的 value 来自前端输入框 studentIDInput
+                    studentID: studentIDInput && studentIDInput.value.trim() ? studentIDInput.value.trim() : null
+                };
+
+                // 定义成功后的回调：显示消息并触发保存
+                const onSuccess = () => {
+                    // 触发后端保存 JSON (GET请求)
+                    fetch('/savetojson',{ method: 'GET' })
+                        .then(() => console.log('Data has been saved to JSON'))
+                        .catch(err => console.error('Save failed:', err));
+                };
+
+                // 定义失败后的回调
+                const onError = (error) => {
+                    SubmissionResult.textContent = 'Failed to add member: ' + (error && error.message ? error.message : error);
+                    console.error('Add member failed:', error);
+                };
+
+                if(positionInput.value === 'RegularMember') {
+                    // 注意：api.js 中导出的是 fetchAddMember
+                    api.fetchAddRegularMember(memberData)
+                        .then(() => {
+                            onSuccess('Regular member added successfully!');
+                            refreshMemberList();
+                        })
+                        .catch(onError);
+                }
+                if(positionInput.value === 'SectionHead') {
+                    api.fetchAddSectionHead(memberData)
+                        .then(() => {
+                            onSuccess('Section head added successfully!');
+                            refreshMemberList();
+                        })
+                        .catch(onError);
+                }
+                if(positionInput.value === 'President') {
+                    api.fetchAddPresident(memberData)
+                        .then(() => {
+                            onSuccess('President added successfully!');
+                            refreshMemberList();
+                        })
+                        .catch(onError);
+                }
+                // 验证通过，执行提交逻辑
+            }
+        });
+    }
+
+
 
     // 4. 初始化自定义下拉菜单逻辑
     const customSelect = document.getElementById('customPositionSelect');

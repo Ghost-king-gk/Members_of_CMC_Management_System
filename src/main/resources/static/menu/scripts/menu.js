@@ -3,7 +3,7 @@ import * as api from './api.js'; // 引入我们封装好的 API 模块
 
 document.addEventListener('DOMContentLoaded', async () => {
     const memberList = document.getElementById('memberList');
-    const addMemberBtn = document.getElementById('addMemberBtn');
+    
     memberList.innerHTML = ''; // 清空现有列表
 
     try {
@@ -38,28 +38,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
+    
     // 处理“添加成员”按钮点击事件
+    const addMemberBtn = document.getElementById('addMemberBtn');
     addMemberBtn.addEventListener('click', () => {
         render.renderAddMemberForm();
     });
 
-
 });
-
-// 模拟后端 API 请求
-function mockFetchMemberDetails(id) {
-    return new Promise((resolve) => {
-        // 模拟 300ms 网络延迟
-        setTimeout(() => {
-            resolve({
-                id: id,
-                name: `Member ${id}`, // 实际项目中这里会是真实名字
-                role: id % 2 === 0 ? 'Senior Developer' : 'Product Designer',
-                department: 'Engineering',
-                email: `member${id}@example.com`,
-                joinDate: '2023-08-15',
-                bio: 'This is a mock biography fetched from the "backend". It demonstrates how the detail view adapts to content.'
-            });
-        }, 300);
-    });
-}

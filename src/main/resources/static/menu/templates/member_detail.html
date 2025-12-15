@@ -1,30 +1,54 @@
 <div class="member-detail">
     <header class="member-detail__header">
-        <h1 class="member-detail__name">{{name}}</h1>
+        <div class="member-detail__title-row">
+            <h1 class="member-detail__name">{{name}}</h1>
+
+            <div class="member-detail__delete">
+                <button type="button" class="delete-btn" data-action="toggle-delete" aria-label="Delete member" aria-haspopup="dialog" aria-expanded="false">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" role="img">
+                        <path d="M4 7H20" stroke="#ef4444" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M10 11V18" stroke="#ef4444" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M14 11V18" stroke="#ef4444" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M6 7L7 20H17L18 7" stroke="#ef4444" stroke-width="2" stroke-linejoin="round"/>
+                        <path d="M9 7V4H15V7" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+
+                <div class="delete-popover" data-role="delete-popover" hidden>
+                    <div class="delete-popover__title">Delete this member?</div>
+                    <div class="delete-popover__hint">{{name}} (ID: {{id}})</div>
+                    <div class="delete-popover__actions">
+                        <button type="button" class="popover-btn popover-btn--cancel" data-action="cancel-delete">Cancel</button>
+                        <button type="button" class="popover-btn popover-btn--danger" data-action="confirm-delete">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <div class="member-meta-row">
             <span class="member-detail__id">ID: {{id}}</span>
-            <span class="member-detail__studentid">studentID: {{studentId}}</span>
+            <span class="member-detail__studentid">studentID: {{studentID}}</span>
             <!-- 状态标签 -->
             <span class="member-status {{statusClass}}">{{statusText}}</span>
         </div>
     </header>
     
     <div class="member-detail__grid">
-        <div class="detail-item">
-            <div class="detail-item__label">Position</div>
-            <div class="detail-item__value">{{position}}</div>
+        <div class="item">
+            <div class="label">Position</div>
+            <div class="value">{{position}}</div>
         </div>
-        <div class="detail-item">
-            <div class="detail-item__label">phoneNumber</div>
-            <div class="detail-item__value">{{phoneNumber}}</div>
+        <div class="item">
+            <div class="label">phoneNumber</div>
+            <div class="value">{{phoneNumber}}</div>
         </div>
-        <div class="detail-item">
-            <div class="detail-item__label">Email</div>
-            <div class="detail-item__value">{{email}}</div>
+        <div class="item">
+            <div class="label">Email</div>
+            <div class="value">{{email}}</div>
         </div>
-        <div class="detail-item">
-            <div class="detail-item__label">Join Date</div>
-            <div class="detail-item__value">{{joinDate}}</div>
+        <div class="item">
+            <div class="label">Join Date</div>
+            <div class="value">{{joinDate}}</div>
         </div>
     </div>
 

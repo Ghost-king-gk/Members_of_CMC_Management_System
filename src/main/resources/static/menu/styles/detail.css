@@ -21,6 +21,126 @@
     font-weight: 700;
 }
 
+.member-detail__title-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+}
+
+.member-detail__delete {
+    position: relative;
+    flex: 0 0 auto;
+}
+
+.member-detail__delete .delete-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid rgba(239, 68, 68, 0.35);
+    border-radius: 8px;
+    padding: 6px;
+    cursor: pointer;
+    transition: transform 0.15s ease, filter 0.15s ease, background 0.15s ease;
+}
+
+.member-detail__delete .delete-btn:hover {
+    filter: brightness(1.05);
+    transform: translateY(-1px);
+    background: rgba(239, 68, 68, 0.08);
+}
+
+.member-detail__delete .delete-popover {
+    position: absolute;
+    left: calc(100% + 10px);
+    top: 50%;
+    transform: translateY(-50%);
+    min-width: 220px;
+    padding: 12px;
+    border-radius: 10px;
+    background: rgba(17, 24, 39, 0.95);
+    border: 1px solid rgba(239, 68, 68, 0.45);
+    box-shadow:
+        0 0 0 1px rgba(239, 68, 68, 0.15),
+        0 0 18px rgba(239, 68, 68, 0.18),
+        0 10px 30px rgba(0, 0, 0, 0.35);
+    z-index: 10;
+}
+
+/* 弹出确认框：出现时的淡入/浮现动画 */
+.member-detail__delete .delete-popover:not([hidden]) {
+    animation: deletePopoverIn 180ms ease-out;
+}
+
+@keyframes deletePopoverIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50%) translateX(-6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(-50%) translateX(0);
+    }
+}
+
+.member-detail__delete .delete-popover::before {
+    content: '';
+    position: absolute;
+    left: -6px;
+    top: 50%;
+    width: 10px;
+    height: 10px;
+    transform: translateY(-50%) rotate(45deg);
+    background: rgba(17, 24, 39, 0.95);
+    border-left: 1px solid rgba(239, 68, 68, 0.35);
+    border-bottom: 1px solid rgba(239, 68, 68, 0.35);
+}
+
+.member-detail__delete .delete-popover__title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #f3f4f6;
+    margin-bottom: 6px;
+}
+
+.member-detail__delete .delete-popover__hint {
+    font-size: 12px;
+    color: #9ca3af;
+    margin-bottom: 10px;
+}
+
+.member-detail__delete .delete-popover__actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.member-detail__delete .popover-btn {
+    border: 0;
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: filter 0.15s ease, transform 0.15s ease;
+}
+
+.member-detail__delete .popover-btn:hover {
+    filter: brightness(1.05);
+    transform: translateY(-1px);
+}
+
+.member-detail__delete .popover-btn--cancel {
+    background: rgba(255, 255, 255, 0.08);
+    color: #e5e7eb;
+}
+
+.member-detail__delete .popover-btn--danger {
+    background: rgba(239, 68, 68, 0.85);
+    color: #111827;
+}
+
 .member-detail__id {
     font-size: 14px;
     color: #9ca3af;
@@ -50,21 +170,21 @@
     margin-bottom: 32px;
 }
 
-.detail-item {
+.member-detail__grid .item {
     background: rgba(255, 255, 255, 0.03);
     padding: 16px;
     border-radius: 8px;
     border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.detail-item__label {
+.member-detail .label {
     font-size: 12px;
     color: #9ca3af;
     margin-bottom: 6px;
     text-transform: uppercase; /* 全大写标签 */
 }
 
-.detail-item__value {
+.member-detail__grid .value {
     font-size: 16px;
     color: #f3f4f6;
     font-weight: 500;
@@ -154,34 +274,34 @@
     gap: 16px; /* 每个评分条之间的间距 */
 }
 
-.score-item {
+.member-detail__scorebars .score-item {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
-.score-header {
+.member-detail__scorebars .score-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
     font-size: 14px;
 }
 
-.score-label {
+.member-detail__scorebars .score-label {
     color: #9ca3af;
     text-transform: uppercase;
     font-size: 12px;
     letter-spacing: 0.5px;
 }
 
-.score-value {
+.member-detail__scorebars .score-value {
     color: #f3f4f6;
     font-family: 'Courier New', monospace; /* 使用等宽字体，便于对齐 */
     font-weight: 600;
 }
 
 /* 评分条轨道背景 */
-.score-track {
+.member-detail__scorebars .score-track {
     height: 8px;
     background: rgba(255, 255, 255, 0.08);
     border-radius: 4px;
@@ -189,7 +309,7 @@
 }
 
 /* 评分条填充 */
-.score-fill {
+.member-detail__scorebars .score-fill {
     height: 100%;
     border-radius: 4px;
     width: 0; /* 默认宽度为0，由JS控制 */
@@ -197,16 +317,16 @@
 }
 
 /* 评分条填充颜色：面试评分 */
-.fill-interview {
+.member-detail__scorebars .fill-interview {
     background: linear-gradient(90deg, #3b82f6, #60a5fa); /* 蓝色渐变 */
     box-shadow: 0 0 10px rgba(59, 130, 246, 0.4); /* 发光效果 */
 }
 
-.fill-internship {
+.member-detail__scorebars .fill-internship {
     background: linear-gradient(90deg, #e1b935, #fcd34d); /* 绿色渐变 */
     box-shadow: 0 0 10px rgba(226, 203, 28, 0.4);
 }
-.fill-salary {
+.member-detail__scorebars .fill-salary {
     background: linear-gradient(90deg, #68c834, #89ff68); /* 黄色渐变 */
     box-shadow: 0 0 10px rgba(115, 238, 33, 0.4);
 }
@@ -287,7 +407,10 @@
     padding-top: 20px;
 }
 
-.btn-submit, .btn-cancel {
+
+
+/* 提交和取消按钮 */
+.btn-submitNewMember, .btn-cancel {
     padding: 10px 24px;
     border-radius: 6px;
     font-size: 16px;
@@ -297,13 +420,13 @@
     border: none;
 }
 
-.btn-submit {
+.btn-submitNewMember {
     background: linear-gradient(135deg, #4a90e2, #3b82f6);
     color: white;
     box-shadow: 0 4px 6px rgba(59, 130, 246, 0.3);
 }
 
-.btn-submit:hover {
+.btn-submitNewMember:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 12px rgba(59, 130, 246, 0.4);
 }
@@ -408,5 +531,91 @@
 .select-items div:hover {
     background-color: rgba(74, 144, 226, 0.1);
     color: #ffffff;
+}
+
+
+
+
+/* --- 验证模态框 (Validation Modal) --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.modal-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-box {
+    background: #2b303b;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 24px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    transform: translateY(20px);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+.modal-overlay.show .modal-box {
+    transform: translateY(0);
+}
+
+.modal-title {
+    color: #f3f4f6;
+    margin: 0 0 12px 0;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.modal-message {
+    color: #9ca3af;
+    margin-bottom: 24px;
+    line-height: 1.5;
+}
+
+.modal-btn {
+    background: linear-gradient(135deg, #4a90e2, #3b82f6);
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: transform 0.2s;
+    box-shadow: 0 4px 6px rgba(59, 130, 246, 0.3);
+}
+
+.modal-btn:hover {
+    transform: scale(1.05);
+}
+
+/* 错误输入框震动动画 */
+.input-error {
+    border-color: #ef4444 !important;
+    /* 关键点1：这里定义了动画持续时间为 1s */
+    animation: shake 1s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+@keyframes shake {
+  10%, 90% { transform: translate3d(-1px, 0, 0); }
+  20%, 80% { transform: translate3d(2px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+  40%, 60% { transform: translate3d(4px, 0, 0); }
 }
 
