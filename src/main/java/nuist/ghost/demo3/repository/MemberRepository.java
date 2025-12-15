@@ -66,6 +66,7 @@ public class MemberRepository {
 
     public void saveAll(List<Member> members) {
         store.addAll(members);
+        idGen.set(store.size());
         // 批量保存成员
     }
 }

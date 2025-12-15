@@ -11,17 +11,17 @@
         <!-- Grid Layout for Inputs -->
         <div class="member-detail__grid">
             <div class="form-group">
-                <label class="detail-item__label" for="name">Full Name</label>
-                <input type="text" id="name" name="name" class="form-input" placeholder="Enter name" required>
+                <label class="label" for="name">Full Name *</label>
+                <input type="text" id="name" name="name" class="form-input" placeholder="Enter name">
             </div>
             
             <div class="form-group">
-                <label class="detail-item__label" for="studentId">Student ID</label>
-                <input type="text" id="studentId" name="studentId" class="form-input" placeholder="Enter ID">
+                <label class="label" for="studentID">Student ID</label>
+                <input type="text" id="studentID" name="studentID" class="form-input" placeholder="Enter ID">
             </div>
 
             <div class="form-group">
-                <label class="detail-item__label">Position</label>
+                <label class="label">Position</label>
                 <!-- 隐藏的输入框，用于存储实际值，方便表单提交 -->
                 <input type="hidden" id="position" name="position" value="RegularMember">
                 
@@ -37,19 +37,19 @@
             </div>
             
             <div class="form-group">
-                <label class="detail-item__label" for="phoneNumber">Phone</label>
+                <label class="label" for="phoneNumber">Phone</label>
                 <input type="tel" id="phoneNumber" name="phoneNumber" class="form-input" placeholder="Phone number">
             </div>
 
             <div class="form-group">
-                <label class="detail-item__label" for="email">Email</label>
+                <label class="label" for="email">Email</label>
                 <input type="email" id="email" name="email" class="form-input" placeholder="Email address">
             </div>
         </div>
 
         <!-- Status Toggle Section -->
         <div class="form-section">
-            <label class="detail-item__label" style="margin-bottom: 12px; display: block;">Membership Status</label>
+            <label class="label" style="margin-bottom: 12px; display: block;">Membership Status</label>
             <div class="status-toggle-group">
                 <label class="radio-label">
                     <input type="radio" name="isProbation" value="false" checked>
@@ -89,7 +89,17 @@
         <!-- Actions -->
         <div class="form-actions">
             <button type="button" class="btn-cancel" onclick="document.getElementById('memberContent').innerHTML='<section class=\'content__card\'><h2>Select a member</h2></section>'">Cancel</button>
-            <button type="submit" class="btn-submit">Create Member</button>
+            <button type="submit" id="addMemberSubmit" class="btn-submitNewMember">Create Member</button>
+            <div id="SubmissionResult"></div>
         </div>
     </form>
+
+    <!-- Validation Modal -->
+    <div id="validationModal" class="modal-overlay">
+        <div class="modal-box">
+            <h3 class="modal-title">Missing Information</h3>
+            <p class="modal-message">Please enter the member's <strong>Full Name</strong> to continue.</p>
+            <button class="modal-btn" id="closeModalBtn">Got it</button>
+        </div>
+    </div>
 </div>

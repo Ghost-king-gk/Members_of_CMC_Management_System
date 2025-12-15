@@ -1,12 +1,17 @@
 package nuist.ghost.demo3.controller;
 
 import nuist.ghost.demo3.entities.Member;
+import nuist.ghost.demo3.repository.MemberRepository;
 import nuist.ghost.demo3.service.MemberService;
+import nuist.ghost.demo3.utils.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.swing.text.html.Option;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,6 +20,9 @@ public class MemberController {
 
     @Autowired
     private MemberService memberService;
+
+    @Autowired
+    private MemberRepository memberRepository;
 
     @GetMapping ("/api/members")
     //GetMapping 注解表示该方法处理GET请求到根路径
@@ -56,7 +64,7 @@ public class MemberController {
         return memberService.createMember(member);
     }
 
-    @PostMapping("/sectionHead")
+    @PostMapping("/sectionhead")
     public Member createSectionHead(@RequestParam String name, @RequestParam String studentID){
         Member member = new Member(name, studentID){
             @Override
@@ -78,6 +86,8 @@ public class MemberController {
         };
         return memberService.createMember(member);
     }
+    //在浏览器中输入: http://localhost:8080/president?name=李四&studentID=2021002
+    //即可创建一个名为李四，学号为2021002的会长
 
     @PutMapping("/{id}")
     public ResponseEntity<Member> updateMember(@PathVariable Long id, @RequestBody Member memberDetails){
@@ -95,4 +105,23 @@ public class MemberController {
         }
         return ResponseEntity.notFound().build();
     }
+
+    @GetMapping("/savetojson")
+    public void saveToJSON() throws IOException {
+        final Path DATAPATH = Paths.get("data", "members.json");
+        JsonUtils.writeToFile(memberRepository.findAll(), DATAPATH);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteMember(@PathVariable Long id){
+        Optional<Member> existingMember = memberService.getMemberByID(id);
+        if (existingMember.isPresent()) {
+            memberService.deleteMember(id);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+
+
 }
