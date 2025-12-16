@@ -5,6 +5,7 @@ import nuist.ghost.demo3.entities.Member;
 import nuist.ghost.demo3.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import nuist.ghost.demo3.exception.DuplicateStudentIdException;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,10 +19,17 @@ public class MemberService {
 
     public Member createMember(Member member) {
         /*创建成员*/
-        //在创建成员之前，检查是否已经存在相同学号的成员
-        if(   memberRepository.existsByStudentID( member.getStudentID() )   ){
-            throw new IllegalArgumentException("Member with studentID " + member.getStudentID() + " already exists.");
+        if(member.getStudentID() == null || member.getStudentID().trim().isEmpty() ){
+            throw new IllegalArgumentException("StudentID cannot be null or empty.");
         }
+        if(!member.getStudentID().trim().matches("\\d{12}")){
+            throw new IllegalArgumentException("StudentID must be exactly 12 characters long.");
+        }
+        //在创建成员之前，检查是否已经存在相同学号的成员
+        if(memberRepository.existsByStudentID(member.getStudentID().trim())){
+            throw new DuplicateStudentIdException("Member with studentID " + member.getStudentID() + " already exists.");
+        }
+        member.setStudentID(member.getStudentID().trim());
         return memberRepository.save(member);
     }
 
