@@ -38,82 +38,107 @@ function renderMembersSequentially(members) {
 
 
 
-// 缓存模板内容
+// 缓存成员详情模板内容
 let memberDetailTemplate = null;
 
-// 异步加载模板函数
-async function loadTemplate() {
+// 异步加载成员详情模板函数（与添加成员表单的写法保持一致）
+async function loadMemberDetailTemplate() {
     if (memberDetailTemplate) return memberDetailTemplate;
     try {
-        const response = await fetch('./templates/member_detail.html');//从templates文件夹中获取模板
-        if (!response.ok) throw new Error('Failed to load template');//错误检查，如果请求失败则抛出错误
-        memberDetailTemplate = await response.text(); // 将模板内容存储到缓存变量中
-        return memberDetailTemplate; // 返回模板内容
+        const response = await fetch('./templates/member_detail.html');
+        if (!response.ok) throw new Error('Failed to load member detail template');
+        memberDetailTemplate = await response.text();
+        return memberDetailTemplate;
     } catch (error) {
         console.error('Error loading template:', error);
-        return '<div class="error">Error loading template</div>';// 返回一个简单的错误模板
+        return '<div class="error">Error loading template</div>';
     }
+}
+
+const EMPTY_TEMPLATE_CONTENT = '<section class="content__card"><h2>No data</h2></section>';
+
+function escapeHtml(value) {
+    if (value === null || value === undefined) return '';
+    return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+function fillMemberDetailTemplate(template, model) {
+    if (!template) return EMPTY_TEMPLATE_CONTENT;
+    return template.replace(/\{\{(\w+)\}\}/g, (match, key) => {
+        if (Object.prototype.hasOwnProperty.call(model, key) && model[key] !== undefined && model[key] !== null) {
+            return escapeHtml(model[key]);
+        }
+        return '';
+    });
 }
 
 async function renderMemberDetails(member) {
     /* 渲染成员详情 */
     const contentContainer = document.getElementById('memberContent');
     
-    // 确保模板已加载
-    const template = await loadTemplate();
+    // 1) 确保模板已加载（与 add member form 一样：直接 innerHTML 注入）
+    const template = await loadMemberDetailTemplate();
 
-    // 逻辑控制：判断是否为实习生
-    const Probation = member.Probation === true;
-    const statusText = Probation ? 'Intern' : 'Official';
-    const statusClass = Probation ? 'status-intern' : 'status-official';
+    const probation = Boolean(
+        (member && typeof member.isProbation === 'boolean') ? member.isProbation :
+        (member && typeof member.probation === 'boolean') ? member.probation :
+        (member && typeof member.Probation === 'boolean') ? member.Probation :
+        false
+    );
+    const statusText = probation ? 'Intern' : 'Official';
+    const statusClass = probation ? 'status-intern' : 'status-official';
 
-    // 1. 准备数据：计算面试分数的百分比
-    const interviewScore = member.interviewScore || 4; // 默认值为0，可以暂时调整之查看效果
+    const interviewScore = (member && typeof member.interviewScore === 'number') ? member.interviewScore : 0;
     const interviewMax = 15;
     const interviewPercent = Math.min((interviewScore / interviewMax) * 100, 100);
 
-    const salaryScore = member.salaryScore || 2025; // 默认值为0，可以暂时调整之查看效果
-    const salaryMax = 5500;
-    const salaryPercent = Math.min((salaryScore / 5500) * 100, 100);
-
-    const internshipScore = member.internshipScore || 13; // 默认值为0，可以暂时调整之查看效果
+    const internshipScore = (member && typeof member.internshipScore === 'number') ? member.internshipScore : 0;
     const internshipMax = 20;
     const internshipPercent = Math.min((internshipScore / internshipMax) * 100, 100);
 
-    // 准备视图数据对象 (ViewModel)
-    // 这里我们将所有需要在模板中显示的数据都整理好
-    const viewModel = {
-        name: member.name,
-        id: member.id,
-        studentID: member.studentID || 'studentID',
-        statusText: statusText, //状态文本
-        statusClass: statusClass, //状态样式类
-        position: member.memberType || 'Position',
-        phoneNumber: member.phoneNumber || 'N/A',
-        email: member.email || 'N/A',
-        joinDate: member.joinDate || '2024-01-01',
-        
-        // 分数相关
-        interviewScore: interviewScore,
-        interviewMax: interviewMax,
-        interviewPercent: interviewPercent,
-        
-        internshipScore: internshipScore,
-        internshipMax: internshipMax,
-        internshipPercent: internshipPercent,
+    const salaryScore = (member && typeof member.salaryScore === 'number') ? member.salaryScore : 0;
+    const salaryMax = 5500;
+    const salaryPercent = Math.min((salaryScore / salaryMax) * 100, 100);
 
-        salaryScore: salaryScore,
-        salaryMax: salaryMax,
-        salaryPercent: salaryPercent
+    const id = (member && member.id !== undefined && member.id !== null) ? String(member.id) : '';
+    const name = (member && member.name) ? member.name : '';
+
+    const viewModel = {
+        name,
+        id,
+        studentID: (member && member.studentID) ? member.studentID : '',
+        statusText,
+        statusClass,
+        position: (member && member.memberType) ? member.memberType : '',
+        phoneNumber: (member && member.phoneNumber) ? member.phoneNumber : 'N/A',
+        email: (member && member.email) ? member.email : 'N/A',
+        joinDate: (member && member.joinDate) ? member.joinDate : '',
+        interviewScore: interviewScore.toString(),
+        interviewMax: interviewMax.toString(),
+        interviewPercent: interviewPercent.toString(),
+        internshipScore: internshipScore.toString(),
+        internshipMax: internshipMax.toString(),
+        internshipPercent: internshipPercent.toString(),
+        salaryScore: salaryScore.toString(),
+        salaryMax: salaryMax.toString(),
+        salaryPercent: salaryPercent.toString(),
+        nameWithId: id ? `${name} (ID: ${id})` : name
     };
 
-    // 简单的模板替换引擎
-    // 将模板中的 {{key}} 替换为 viewModel[key]
-    const html = template.replace(/\{\{(\w+)\}\}/g, (match, key) => {// 正则匹配 {{key}} 形式的占位符
-        return viewModel[key] !== undefined ? viewModel[key] : '';
-    });
+    contentContainer.innerHTML = fillMemberDetailTemplate(template, viewModel);
 
-    contentContainer.innerHTML = html;
+    const editBtn = contentContainer.querySelector('[data-action="edit-member"]');
+    if (editBtn) {
+        editBtn.addEventListener('click', () => {
+            if (!id) return;
+            window.location.href = `/edit/index.html?id=${encodeURIComponent(id)}`;
+        });
+    }
 
     // 绑定“删除”弹出框逻辑（从垃圾桶右侧冒出，不是整页弹窗）
     const deleteWrap = contentContainer.querySelector('.member-detail__delete');
@@ -170,9 +195,9 @@ async function renderMemberDetails(member) {
                 e.stopPropagation();
                 confirmBtn.disabled = true;
                 try {
-                    await api.fetchDeleteMember(member.id);
+                    await api.deleteMember(member.id);
                     console.log('Member has been deleted:', member.id);
-                    await fetch('/savetojson');
+                    await api.exportMembers();
 
                     refreshMemberList();
 
@@ -234,8 +259,13 @@ async function renderAddMemberForm() {
     const positionInput = document.getElementById('position');
     // 修正：HTML中的ID是 'studentId' (小写d)，这里必须匹配
     const studentIDInput = document.getElementById('studentID');
-    const modal = document.getElementById('validationModal');
-    const closeModalBtn = document.getElementById('closeModalBtn');
+    const emailInput = document.getElementById('email');
+    const phoneInput = document.getElementById('phoneNumber');
+    const interviewScoreInput = document.getElementById('interviewScore');
+    const internshipScoreInput = document.getElementById('internshipScore');
+    const salaryScoreInput = document.getElementById('salaryScore');
+    const submissionResult = document.getElementById('SubmissionResult');
+    
 
     if (form) {/////如果 form 存在，这是一种种保护措施，防止直接报错，确保下面的代码只在表单存在时执行
         // 禁用浏览器默认验证，接管控制权
@@ -257,55 +287,33 @@ async function renderAddMemberForm() {
                 // 只有移除了类，下次点击时再次添加类，动画才会重新播放
                 setTimeout(() => nameInput.classList.remove('input-error'), 1000);
             } else {
-                // 构造数据对象：键名必须与后端期望的参数名一致
-                // 后端期望: ?name=...&studentID=...
                 const memberData = {
                     name: nameInput.value.trim(),
-                    // 注意：这里左边的 key 'studentID' 是发给后端的参数名
-                    // 右边的 value 来自前端输入框 studentIDInput
-                    studentID: studentIDInput && studentIDInput.value.trim() ? studentIDInput.value.trim() : null
+                    studentID: studentIDInput && studentIDInput.value.trim() ? studentIDInput.value.trim() : null,
+                    memberType: positionInput && positionInput.value ? positionInput.value : 'RegularMember',
+                    email: emailInput && emailInput.value.trim() ? emailInput.value.trim() : null,
+                    phoneNumber: phoneInput && phoneInput.value.trim() ? phoneInput.value.trim() : null,
+                    isProbation: (() => {
+                        const checked = contentContainer.querySelector('input[name="isProbation"]:checked');
+                        if (!checked) return null;
+                        return checked.value === 'true';
+                    })(),
+                    interviewScore: interviewScoreInput && interviewScoreInput.value !== '' ? Number(interviewScoreInput.value) : null,
+                    internshipScore: internshipScoreInput && internshipScoreInput.value !== '' ? Number(internshipScoreInput.value) : null,
+                    salaryScore: salaryScoreInput && salaryScoreInput.value !== '' ? Number(salaryScoreInput.value) : null
                 };
 
-                // 定义成功后的回调：显示消息并触发保存
-                const onSuccess = () => {
-                    // 触发后端保存 JSON (GET请求)
-                    fetch('/savetojson',{ method: 'GET' })
-                        .then(() => console.log('Data has been saved to JSON'))
-                        .catch(err => console.error('Save failed:', err));
-                };
-
-                // 定义失败后的回调
-                const onError = (error) => {
-                    SubmissionResult.textContent = 'Failed to add member: ' + (error && error.message ? error.message : error);
+                try {
+                    await api.createMember(memberData);
+                    await api.exportMembers();
+                    if (submissionResult) submissionResult.textContent = 'Member created.';
+                    await refreshMemberList();
+                } catch (error) {
+                    if (submissionResult) {
+                        submissionResult.textContent = 'Failed to add member: ' + (error && error.message ? error.message : error);
+                    }
                     console.error('Add member failed:', error);
-                };
-
-                if(positionInput.value === 'RegularMember') {
-                    // 注意：api.js 中导出的是 fetchAddMember
-                    api.fetchAddRegularMember(memberData)
-                        .then(() => {
-                            onSuccess('Regular member added successfully!');
-                            refreshMemberList();
-                        })
-                        .catch(onError);
                 }
-                if(positionInput.value === 'SectionHead') {
-                    api.fetchAddSectionHead(memberData)
-                        .then(() => {
-                            onSuccess('Section head added successfully!');
-                            refreshMemberList();
-                        })
-                        .catch(onError);
-                }
-                if(positionInput.value === 'President') {
-                    api.fetchAddPresident(memberData)
-                        .then(() => {
-                            onSuccess('President added successfully!');
-                            refreshMemberList();
-                        })
-                        .catch(onError);
-                }
-                // 验证通过，执行提交逻辑
             }
         });
     }

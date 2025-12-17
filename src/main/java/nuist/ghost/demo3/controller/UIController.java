@@ -21,4 +21,9 @@ public class UIController {
     public String menu(){
         return "redirect:/menu/index.html";
     }
+
+    @GetMapping("/edit")
+    public String edit(){
+        return "redirect:/edit/index.html";
+    }
 }

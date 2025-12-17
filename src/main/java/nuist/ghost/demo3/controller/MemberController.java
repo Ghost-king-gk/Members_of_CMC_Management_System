@@ -1,127 +1,57 @@
 package nuist.ghost.demo3.controller;
 
+import nuist.ghost.demo3.dto.CreateMemberRequest;
+import nuist.ghost.demo3.dto.UpdateMemberRequest;
 import nuist.ghost.demo3.entities.Member;
-import nuist.ghost.demo3.repository.MemberRepository;
 import nuist.ghost.demo3.service.MemberService;
-import nuist.ghost.demo3.utils.JsonUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.*;
-
-import javax.swing.text.html.Option;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
+@RequestMapping("/api/members")
 public class MemberController {
 
-    @Autowired
-    private MemberService memberService;
+    private final MemberService memberService;
 
-    @Autowired
-    private MemberRepository memberRepository;
+    public MemberController(MemberService memberService) {
+        this.memberService = memberService;
+    }
 
-    @GetMapping ("/api/members")
-    //GetMapping 注解表示该方法处理GET请求到根路径
+    @GetMapping
     public List<Member> getAllMembers() {
         return memberService.getAllMembers();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Member> getMemberByID(@PathVariable Long id){
-        Optional<Member> member = memberService.getMemberByID(id);
-        return member.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public Member getMemberByID(@PathVariable Long id) {
+        return memberService.getMemberByID(id);
     }
 
-    @PostMapping("/regular") //POST请求 处理 /regular 路径 创建普通成员
-    public Member createRegularMember(@RequestParam String name, @RequestParam String studentID){
-        //@RequestParam 注解表示从请求参数中获取 name 和 studentID
-        //如何输入请求参数？：在URL中添加参数，例如：http://localhost:8080/regular?name=张三&studentID=2021001
-        //但是这样的交互方法不太好，建议使用Postman等工具发送POST请求，或者通过前端页面提交表单数据
-        //如何使用前端页面提交表单数据？：在HTML页面中添加表单，并设置提交地址为 /regular
-        // 表单中添加 name 和 studentID 两个输入框，并设置提交按钮的提交地址为 /regular
-        // 这样用户填写表单后，点击提交按钮即可发送POST请求到 /regular 路径
-        // 这样，用户填写表单后，点击提交按钮，即可创建一个普通成员
-        // 请给出示例：<form action="/regular" method="post">
-        // 写在哪里呢？：可以写在UIController中，或者单独创建一个HTML页面
-        // 如何单独创建？：在resources/templates目录下创建一个HTML文件，例如create_member.html
-        // template和static目录的区别？：static目录下的文件是静态文件，不会被SpringBoot处理，例如HTML文件，CSS文件，JavaScript文件
-        // template目录下的文件是动态文件，会被SpringBoot处理，例如Java文件，XML文件，配置文件
-        // 那你为何让我在templates下创建HTML文件？：因为templates目录下的HTML文件可以使用Thymeleaf等模板引擎进行动态渲染
-        // 这样可以根据不同的条件渲染不同的内容。
-        // 什么是Thymeleaf？：Thymeleaf是一个模板引擎，它可以根据模板生成HTML，Java文件，XML文件，配置文件
-        // 这样可以根据不同的条件渲染不同的内容。
-        Member member = new Member(name, studentID){
-            @Override
-            public String getMemberType() {
-                return "RegularMember";
-            }
-        };
-        return memberService.createMember(member);
+    @PostMapping //创建成员 Create Member
+    public Member createMember(@RequestBody CreateMemberRequest request) {
+        return memberService.createMember(request);
     }
 
-    @PostMapping("/sectionhead")
-    public Member createSectionHead(@RequestParam String name, @RequestParam String studentID){
-        Member member = new Member(name, studentID){
-            @Override
-            public String getMemberType() {
-                return "SectionHead";
-            }
-        };
-        return memberService.createMember(member);
+    @PutMapping("/{id}")  //更新   成员信息 Update Member Info
+    public ResponseEntity<Member> updateMember(@PathVariable Long id, @RequestBody UpdateMemberRequest request) {
+        /* 更新成员信息 Update Member Info */
+        Member updatedMember = memberService.updateMember(id, request);
+        return ResponseEntity.ok(updatedMember);
     }
 
-
-    @PostMapping("/president")
-    public Member createPresident(@RequestParam String name, @RequestParam String studentID){
-        Member member = new Member(name, studentID){
-            @Override
-            public String getMemberType() {
-                return "President";
-            }
-        };
-        return memberService.createMember(member);
+    @DeleteMapping("/{id}") //删除    成员 Delete Member
+    public ResponseEntity<Void> deleteMember(@PathVariable Long id) {
+        /* 删除成员 Delete Member */
+        memberService.deleteMember(id);
+        return ResponseEntity.noContent().build();
     }
-    //在浏览器中输入: http://localhost:8080/president?name=李四&studentID=2021002
-    //即可创建一个名为李四，学号为2021002的会长
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Member> updateMember(@PathVariable Long id, @RequestBody Member memberDetails){
-        Optional<Member> existingMember = memberService.getMemberByID(id);
-        if (existingMember.isPresent()) {
-            Member member = existingMember.get();
-            member.setName(memberDetails.getName());
-            member.setInterviewScore(memberDetails.getInterviewScore());
-            member.setInternshipScore(memberDetails.getInternshipScore());
-            member.setSalaryScore(memberDetails.getSalaryScore());
-            member.setProbation(memberDetails.isProbation());
-
-            Member updatedMember = memberService.updateMember(member);
-            return ResponseEntity.ok(updatedMember);
-        }
-        return ResponseEntity.notFound().build();
-    }
-
-    @GetMapping("/savetojson")
-    public void saveToJSON() throws IOException {
-        final Path DATAPATH = Paths.get("data", "members.json");
-        JsonUtils.writeToFile(memberRepository.findAll(), DATAPATH);
-    }
-
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteMember(@PathVariable Long id){
-        Optional<Member> existingMember = memberService.getMemberByID(id);
-        if (existingMember.isPresent()) {
-            memberService.deleteMember(id);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
-    }
-
-
-
 }
+

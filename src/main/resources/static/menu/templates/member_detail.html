@@ -2,7 +2,9 @@
     <header class="member-detail__header">
         <div class="member-detail__title-row">
             <h1 class="member-detail__name">{{name}}</h1>
-
+                <button type="button" class="member-detail__edit" data-action="edit-member" aria-label="Edit member">
+                    <span>Edit</span>
+                </button>
             <div class="member-detail__delete">
                 <button type="button" class="delete-btn" data-action="toggle-delete" aria-label="Delete member" aria-haspopup="dialog" aria-expanded="false">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" role="img">
@@ -16,7 +18,7 @@
 
                 <div class="delete-popover" data-role="delete-popover" hidden>
                     <div class="delete-popover__title">Delete this member?</div>
-                    <div class="delete-popover__hint">{{name}} (ID: {{id}})</div>
+                    <div class="delete-popover__hint">{{nameWithId}}</div>
                     <div class="delete-popover__actions">
                         <button type="button" class="popover-btn popover-btn--cancel" data-action="cancel-delete">Cancel</button>
                         <button type="button" class="popover-btn popover-btn--danger" data-action="confirm-delete">Delete</button>
@@ -68,7 +70,7 @@
         <div class="score-item">
             <div class="score-header">
                 <span class="score-label">Internship Score</span>
-                <span class="score-value">{{internshipScore}} points</span>
+                <span class="score-value">{{internshipScore}} / {{internshipMax}}</span>
             </div>
             <div class="score-track">
                 <div class="score-fill fill-internship" style="width: {{internshipPercent}}%"></div>
@@ -79,7 +81,7 @@
         <div class="score-item">
             <div class="score-header">
                 <span class="score-label">Salary Score</span>
-                <span class="score-value">{{salaryScore}} points</span>
+                <span class="score-value">{{salaryScore}} / {{salaryMax}}</span>
             </div>
             <div class="score-track">
                 <div class="score-fill fill-salary" style="width: {{salaryPercent}}%"></div>
