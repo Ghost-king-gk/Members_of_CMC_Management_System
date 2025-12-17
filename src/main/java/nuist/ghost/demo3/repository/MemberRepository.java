@@ -6,15 +6,23 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 
 @Repository
 public class MemberRepository {
     private final CopyOnWriteArrayList<Member> store = new CopyOnWriteArrayList<>();
-    private final AtomicLong idGen = new AtomicLong(0);
-
+    private long nextAvailableId() {
+        /*Get the minimum Available ID*/
+        java.util.HashSet<Long> used = new java.util.HashSet<>();
+        for (Member m : store) {
+            if (m.getId() != null && m.getId() >= 0) 
+                used.add(m.getId());
+        }
+        long id = 0;
+        while (used.contains(id)) id++;
+        return id;
+    } 
 
     public List<Member> findAll() {
         return store.stream().collect(Collectors.toList());
@@ -29,8 +37,8 @@ public class MemberRepository {
     }
 
     public Member save(Member m) {
-        if (m.getId() == null || m.getId() <= 0) {
-            long id = idGen.getAndIncrement();
+        if (m.getId() == null) {
+            long id = nextAvailableId();
             m.setId(id);
         } else {
             // 如果已有 id，先删除旧的（更新语义）
@@ -46,6 +54,10 @@ public class MemberRepository {
 
     public boolean existsByStudentID(String studentID) {
         return store.stream().anyMatch(m -> m.getStudentID().equals(studentID));
+    }
+
+    public boolean existsById(Long id) {
+        return store.stream().anyMatch(m -> m.getId() != null && m.getId().equals(id));
     }
 
     public List<Member> findByName(String name) {
@@ -65,8 +77,12 @@ public class MemberRepository {
     }
 
     public void saveAll(List<Member> members) {
-        store.addAll(members);
-        idGen.set(store.size());
-        // 批量保存成员
+        for (Member m : members) {
+            save(m);
+        }
+    }
+
+    public void deleteAll() {
+        store.clear();
     }
 }

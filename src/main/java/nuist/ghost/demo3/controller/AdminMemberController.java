@@ -1,0 +1,49 @@
+package nuist.ghost.demo3.controller;
+
+import nuist.ghost.demo3.service.MemberService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/admin/members")
+public class AdminMemberController {
+
+    private final MemberService memberService;
+
+    public AdminMemberController(MemberService memberService) {
+        this.memberService = memberService;
+    }
+
+    @PostMapping("/export")
+    public ResponseEntity<Void> exportToJson() {
+        memberService.exportMembersToJson();
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/sample")
+    public ResponseEntity<Void> createSampleData() {
+        memberService.createSampleData();
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteAllMembers() {
+        memberService.deleteAllMembers();
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/promote")
+    public ResponseEntity<Void> promoteMembers(Long id) {
+        memberService.promoteMember(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/demote")
+    public ResponseEntity<Void> demoteMembers(Long id) {
+        memberService.demoteMember(id);
+        return ResponseEntity.noContent().build();
+    }
+}

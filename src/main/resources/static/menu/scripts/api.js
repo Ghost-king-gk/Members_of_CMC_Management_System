@@ -1,4 +1,8 @@
-export { fetchMemberById, fetchMemberList, fetchAddRegularMember, fetchAddSectionHead, fetchAddPresident, fetchDeleteMember };
+export { fetchMemberById, fetchMemberList, createMember, updateMember, deleteMember, exportMembers };
+
+const API_BASE = '/api';
+const MEMBERS_BASE = API_BASE + '/members';
+const ADMIN_MEMBERS_BASE = API_BASE + '/admin/members';
 
 function mapHttpError(status, backendMessage, url) {
     const msg = (backendMessage || '').trim();
@@ -65,28 +69,33 @@ async function request(url, options = {}) {
  * 通常只需要 id 和 name 字段
  */
 async function fetchMemberList() {
-    return request('/members');
+    return request(MEMBERS_BASE);
 }
 
 async function fetchMemberById(id) {
-    return request('/member/' + encodeURIComponent(id));
+    return request(MEMBERS_BASE + '/' + encodeURIComponent(id));
 }
 
-async function fetchAddRegularMember(data) {
-    const params = new URLSearchParams(data);  
-    return request('/regular?' + params.toString(), { method: 'POST' });
+async function createMember(data) {
+    return request(MEMBERS_BASE, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    });
 }
 
-async function fetchAddSectionHead(data) {
-    const params = new URLSearchParams(data);
-    return request('/sectionhead?' + params.toString(), { method: 'POST' });
+async function deleteMember(id) {
+    return request(MEMBERS_BASE + '/' + encodeURIComponent(id), { method: 'DELETE' });
 }
 
-async function fetchAddPresident(data) {
-    const params = new URLSearchParams(data);
-    return request('/president?' + params.toString(), { method: 'POST' });
+async function exportMembers() {
+    return request(ADMIN_MEMBERS_BASE + '/export', { method: 'POST' });
 }
 
-async function fetchDeleteMember(id) {
-    return request('/delete/' + encodeURIComponent(id), { method: 'DELETE' });
+async function updateMember(id, data) {
+    return request(MEMBERS_BASE + '/' + encodeURIComponent(id), {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    });
 }
