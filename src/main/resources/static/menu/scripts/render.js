@@ -94,33 +94,38 @@ function bindInlinePopover({container,toggleSelector,popoverSelector,cancelSelec
     let removeDocListener = null;
 
     const close = () => {
-        popover.hidden = true;
+        //该语法是JS的一种特殊语法，表示定义一个函数表达式并赋值给一个常量变量close
+        popover.hidden = true; //让窗口隐藏 把hidden属性设为true
         toggleBtn.setAttribute('aria-expanded', 'false');
 
         if (removeDocListener) {
-            removeDocListener();
-            removeDocListener = null;
+            removeDocListener(); // 移除文档点击监听器
+            removeDocListener = null; // 清空引用
         }
 
-        if (activePopoverCloser === close) {
-            activePopoverCloser = null;
+        if (activePopoverCloser === close) {// 如果当前活动弹出框是自己 <=> 如果 activePopoverCloser指向的就是当前的close函数 
+            activePopoverCloser = null; // 清除弹出框引用
         }
     };
 
     const open = () => {
-        if (activePopoverCloser && activePopoverCloser !== close) {
-            activePopoverCloser();
+        if (activePopoverCloser && activePopoverCloser !== close) { //如果有目前的活动的弹出框，关闭它；实现强制切换的效果
+            activePopoverCloser(); // 关闭目前的活动的弹出框
         }
 
-        popover.hidden = false;
+        popover.hidden = false;// 显示弹出框 把hidden属性设为false
         toggleBtn.setAttribute('aria-expanded', 'true');
-        activePopoverCloser = close;
-
+        activePopoverCloser = close; // 设置当前弹出框为活动弹出框 实际上，就是把当前的close函数赋值给activePopoverCloser
+        //后续将可以使用activePopoverCloser()来关闭当前弹出框 等价于调用close()
+        //同时，也会告诉其他弹出框“我现在是活动的弹出框”，从而实现互斥效果。
+    
+        // 添加文档点击监听器以检测点击弹出框外部的情况
         const onDocClick = (e) => {
-            if (!container.contains(e.target)) close();
+            if (!container.contains(e.target)) 
+                close(); // 若点击在弹出框外部，则关闭弹出框
         };
         document.addEventListener('click', onDocClick);
-        removeDocListener = () => document.removeEventListener('click', onDocClick);
+        removeDocListener = () => document.removeEventListener('click', onDocClick);  // 返回一个函数用于移除监听器
     };
 
     toggleBtn.addEventListener('click', (e) => {
@@ -143,7 +148,7 @@ function bindInlinePopover({container,toggleSelector,popoverSelector,cancelSelec
             e.stopPropagation();
             confirmBtn.disabled = true;
             try {
-                await onConfirm({close, confirmBtn, toggleBtn, popover });
+                await onConfirm({close, confirmBtn, toggleBtn, popover});
             } finally {
                 confirmBtn.disabled = false;
             }
@@ -227,17 +232,31 @@ async function renderMemberDetails(member) {
         cancelSelector: '[data-action="cancel-promote"]',
         confirmSelector: '[data-action="confirm-promote"]',
         onConfirm: async ({ close }) => {
+            const resultEl = document.getElementById('promote-result');
             try {
                 await api.promoteMember(member.id);
                 await api.exportMembers();
                 await refreshMemberList();
-                close(); // 关闭弹窗并清理事件监听
+                
+                if (resultEl) {
+                    resultEl.textContent = 'Promoted successfully.';
+                    resultEl.style.color = '#4ade80'; // 简单的成功色
+                }
+                await new Promise(r => setTimeout(r, 800));
+                
+                close(); 
                 const updated = await api.fetchMemberById(member.id);
                 await renderMemberDetails(updated);
             } catch (err) {
                 console.error(err);
+                if (resultEl) {
+                    resultEl.textContent = 'Failed: ' + (err && err.message ? err.message : err);
+                    resultEl.style.color = '#ef4444'; // 简单的错误色
+                }
+                // 失败时也等待一下再关闭，或者不关闭让用户手动关？
+                // 这里保持原逻辑：显示错误后稍等关闭，或者您可以选择不自动关闭
+                await new Promise(r => setTimeout(r, 1500));
                 close();
-                alert('Promote failed: ' + (err && err.message ? err.message : err));
             }
         }
     });
@@ -250,17 +269,28 @@ async function renderMemberDetails(member) {
         cancelSelector: '[data-action="cancel-demote"]',
         confirmSelector: '[data-action="confirm-demote"]',
         onConfirm: async ({ close }) => {
+            const resultEl = document.getElementById('demote-result');
             try {
                 await api.demoteMember(member.id);
                 await api.exportMembers();
                 await refreshMemberList();
-                close(); // 关闭弹窗并清理事件监听
+                
+                if (resultEl) {
+                    resultEl.textContent = 'Demoted successfully.';
+                    resultEl.style.color = '#4ade80';
+                }
+                await new Promise(r => setTimeout(r, 800));
+                close(); 
                 const updated = await api.fetchMemberById(member.id);
                 await renderMemberDetails(updated);
             } catch (err) {
                 console.error(err);
+                if (resultEl) {
+                    resultEl.textContent = 'Failed: ' + (err && err.message ? err.message : err);
+                    resultEl.style.color = '#ef4444';
+                }
+                await new Promise(r => setTimeout(r, 1500));
                 close();
-                alert('Demote failed: ' + (err && err.message ? err.message : err));
             }
         }
     });
