@@ -28,6 +28,230 @@
     gap: 12px;
 }
 
+
+
+/* 编辑按钮 */
+.member-detail__edit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(96, 165, 250, 0.35);
+    background: rgba(96, 165, 250, 0.12);
+    color: #bfdbfe;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: transform 0.15s ease, filter 0.15s ease, background 0.15s ease;
+}
+
+.member-detail__edit:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+    background: rgba(96, 165, 250, 0.2);
+}
+
+.member-detail__edit span {
+    pointer-events: none;
+}
+
+
+/* 晋升/降级按钮（艺术样式） */
+/* 晋升：红色系 */
+.member-detail__promote .promote-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(239, 68, 68, 0.45);
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.14), rgba(239, 68, 68, 0.06));
+    color: rgba(254, 202, 202, 0.95);
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    cursor: pointer;
+    transition: transform 0.15s ease, filter 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    box-shadow:
+        0 0 0 1px rgba(239, 68, 68, 0.12),
+        0 8px 18px rgba(239, 68, 68, 0.10);
+}
+
+.member-detail__promote .promote-btn:hover {
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.20), rgba(239, 68, 68, 0.08));
+    box-shadow:
+        0 0 0 1px rgba(239, 68, 68, 0.18),
+        0 0 22px rgba(239, 68, 68, 0.16),
+        0 12px 28px rgba(0, 0, 0, 0.30);
+}
+
+.member-detail__promote .promote-btn:active {
+    transform: translateY(0);
+}
+
+.member-detail__promote .promote-btn span {
+    pointer-events: none;
+}
+
+/* 降级：绿色系 */
+.member-detail__demote .demote-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(52, 211, 153, 0.45);
+    background: linear-gradient(135deg, rgba(52, 211, 153, 0.14), rgba(16, 185, 129, 0.06));
+    color: rgba(167, 243, 208, 0.95);
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    cursor: pointer;
+    transition: transform 0.15s ease, filter 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    box-shadow:
+        0 0 0 1px rgba(52, 211, 153, 0.12),
+        0 8px 18px rgba(16, 185, 129, 0.10);
+}
+
+.member-detail__demote .demote-btn:hover {
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+    background: linear-gradient(135deg, rgba(52, 211, 153, 0.20), rgba(16, 185, 129, 0.08));
+    box-shadow:
+        0 0 0 1px rgba(52, 211, 153, 0.18),
+        0 0 22px rgba(16, 185, 129, 0.16),
+        0 12px 28px rgba(0, 0, 0, 0.30);
+}
+
+.member-detail__demote .demote-btn:active {
+    transform: translateY(0);
+}
+
+.member-detail__demote .demote-btn span {
+    pointer-events: none;
+}
+
+
+/* 晋升/降级：向下弹出确认框（类似 delete popover） */
+.member-detail__promote,
+.member-detail__demote {
+    position: relative;
+    flex: 0 0 auto;
+}
+
+.promote-popover,
+.demote-popover {
+    position: absolute;
+    left: 50%;
+    top: calc(100% + 10px);
+    transform: translateX(-50%);
+    min-width: 240px;
+    padding: 12px;
+    border-radius: 12px;
+    background: rgba(17, 24, 39, 0.95);
+    box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.08),
+        0 10px 30px rgba(0, 0, 0, 0.35);
+    z-index: 12;
+}
+
+/* 向下弹出：出现动画 */
+.promote-popover:not([hidden]),
+.demote-popover:not([hidden]) {
+    animation: actionPopoverDownIn 180ms ease-out;
+}
+
+@keyframes actionPopoverDownIn {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+/* 箭头：指向按钮（向上指） */
+.promote-popover::before,
+.demote-popover::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    width: 10px;
+    height: 10px;
+    transform: translateX(-50%) rotate(45deg);
+    background: rgba(17, 24, 39, 0.95);
+}
+
+.promote-popover__title,
+.demote-popover__title {
+    font-size: 14px;
+    font-weight: 800;
+    color: #f3f4f6;
+    margin-bottom: 6px;
+}
+
+.promote-popover__hint,
+.demote-popover__hint {
+    font-size: 12px;
+    color: #9ca3af;
+    margin-bottom: 10px;
+}
+
+.promote-popover__actions,
+.demote-popover__actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+/* 红色系：晋升 */
+.member-detail__promote .promote-popover {
+    border: 1px solid rgba(239, 68, 68, 0.45);
+    box-shadow:
+        0 0 0 1px rgba(239, 68, 68, 0.15),
+        0 0 18px rgba(239, 68, 68, 0.16),
+        0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.member-detail__promote .promote-popover::before {
+    border-left: 1px solid rgba(239, 68, 68, 0.35);
+    border-top: 1px solid rgba(239, 68, 68, 0.35);
+}
+
+.popover-btn--promote {
+    background: rgba(239, 68, 68, 0.88);
+    color: #111827;
+}
+
+/* 绿色系：降级 */
+.member-detail__demote .demote-popover {
+    border: 1px solid rgba(16, 185, 129, 0.45);
+    box-shadow:
+        0 0 0 1px rgba(16, 185, 129, 0.15),
+        0 0 18px rgba(16, 185, 129, 0.16),
+        0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.member-detail__demote .demote-popover::before {
+    border-left: 1px solid rgba(16, 185, 129, 0.35);
+    border-top: 1px solid rgba(16, 185, 129, 0.35);
+}
+
+.popover-btn--demote {
+    background: rgba(16, 185, 129, 0.85);
+    color: #111827;
+}
+
+
+
+/* 删除按钮和确认弹出框 */
 .member-detail__delete {
     position: relative;
     flex: 0 0 auto;

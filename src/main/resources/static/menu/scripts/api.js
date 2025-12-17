@@ -1,4 +1,4 @@
-export { fetchMemberById, fetchMemberList, createMember, updateMember, deleteMember, exportMembers };
+export { fetchMemberById, fetchMemberList, createMember, updateMember, deleteMember, exportMembers, promoteMember, demoteMember };
 
 const API_BASE = '/api';
 const MEMBERS_BASE = API_BASE + '/members';
@@ -90,6 +90,14 @@ async function deleteMember(id) {
 
 async function exportMembers() {
     return request(ADMIN_MEMBERS_BASE + '/export', { method: 'POST' });
+}
+
+async function promoteMember(id) {
+    return request(ADMIN_MEMBERS_BASE + '/' + encodeURIComponent(id) + '/promote', { method: 'POST' });
+}
+
+async function demoteMember(id) {
+    return request(ADMIN_MEMBERS_BASE + '/' + encodeURIComponent(id) + '/demote', { method: 'POST' });
 }
 
 async function updateMember(id, data) {

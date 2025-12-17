@@ -132,7 +132,7 @@ async function renderMemberDetails(member) {
 
     contentContainer.innerHTML = fillMemberDetailTemplate(template, viewModel);
 
-    const editBtn = contentContainer.querySelector('[data-action="edit-member"]');
+    const editBtn = contentContainer.querySelector('[data-action="toggle-edit"]');
     if (editBtn) {
         editBtn.addEventListener('click', () => {
             if (!id) return;
@@ -158,7 +158,10 @@ async function renderMemberDetails(member) {
             isOpen = true;
 
             const onDocClick = (e) => {
-                if (!deleteWrap.contains(e.target)) close();
+                if (!deleteWrap.contains(e.target)) {
+                    close();
+                }
+                    
             };
             document.addEventListener('click', onDocClick);
             removeDocListener = () => document.removeEventListener('click', onDocClick);
@@ -178,8 +181,11 @@ async function renderMemberDetails(member) {
         if (toggleBtn) {
             toggleBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                if (isOpen) close();
-                else open();
+                if (isOpen) {
+                    close();
+                }else {
+                    open();
+                }
             });
         }
 

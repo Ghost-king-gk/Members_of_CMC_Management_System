@@ -2,6 +2,39 @@
     <header class="member-detail__header">
         <div class="member-detail__title-row">
             <h1 class="member-detail__name">{{name}}</h1>
+            <button type="button" class="member-detail__edit" data-action="toggle-edit" aria-label="Edit member">
+                <span>Edit</span>
+            </button>
+
+            <div class="member-detail__promote">
+                <button type="button" class="promote-btn" data-action="toggle-promote" aria-label="Promote member" aria-haspopup="dialog" aria-expanded="false">
+                    <span>Promote</span>
+                </button>
+
+                <div class="promote-popover" data-role="promote-popover" hidden>
+                    <div class="promote-popover__title">Promote this member?</div>
+                    <div class="promote-popover__hint">{{name}} (ID: {{id}})</div>
+                    <div class="promote-popover__actions">
+                        <button type="button" class="popover-btn popover-btn--cancel" data-action="cancel-promote">Cancel</button>
+                        <button type="button" class="popover-btn popover-btn--promote" data-action="confirm-promote">Promote</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="member-detail__demote">
+                <button type="button" class="demote-btn" data-action="toggle-demote" aria-label="Demote member" aria-haspopup="dialog" aria-expanded="false">
+                    <span>Demote</span>
+                </button>
+
+                <div class="demote-popover" data-role="demote-popover" hidden>
+                    <div class="demote-popover__title">Demote this member?</div>
+                    <div class="demote-popover__hint">{{name}} (ID: {{id}})</div>
+                    <div class="demote-popover__actions">
+                        <button type="button" class="popover-btn popover-btn--cancel" data-action="cancel-demote">Cancel</button>
+                        <button type="button" class="popover-btn popover-btn--demote" data-action="confirm-demote">Demote</button>
+                    </div>
+                </div>
+            </div>
 
             <div class="member-detail__delete">
                 <button type="button" class="delete-btn" data-action="toggle-delete" aria-label="Delete member" aria-haspopup="dialog" aria-expanded="false">

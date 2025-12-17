@@ -3,6 +3,7 @@ package nuist.ghost.demo3.controller;
 import nuist.ghost.demo3.service.MemberService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,14 +36,14 @@ public class AdminMemberController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/promote")
-    public ResponseEntity<Void> promoteMembers(Long id) {
+    @PostMapping("/{id}/promote")
+    public ResponseEntity<Void> promoteMembers(@PathVariable Long id) {
         memberService.promoteMember(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/demote")
-    public ResponseEntity<Void> demoteMembers(Long id) {
+    @PostMapping("/{id}/demote")
+    public ResponseEntity<Void> demoteMembers(@PathVariable Long id) {
         memberService.demoteMember(id);
         return ResponseEntity.noContent().build();
     }
