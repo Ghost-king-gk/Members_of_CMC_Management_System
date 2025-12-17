@@ -249,6 +249,27 @@
     color: #111827;
 }
 
+/* 通用弹窗按钮样式 (Promote/Demote/Delete) */
+.popover-btn {
+    border: 0;
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: filter 0.15s ease, transform 0.15s ease;
+}
+
+.popover-btn:hover {
+    filter: brightness(1.05);
+    transform: translateY(-1px);
+}
+
+.popover-btn--cancel {
+    background: rgba(255, 255, 255, 0.08);
+    color: #e5e7eb;
+}
+
 
 
 /* 删除按钮和确认弹出框 */
@@ -338,26 +359,6 @@
     display: flex;
     gap: 8px;
     justify-content: flex-end;
-}
-
-.member-detail__delete .popover-btn {
-    border: 0;
-    border-radius: 8px;
-    padding: 8px 10px;
-    font-size: 12px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: filter 0.15s ease, transform 0.15s ease;
-}
-
-.member-detail__delete .popover-btn:hover {
-    filter: brightness(1.05);
-    transform: translateY(-1px);
-}
-
-.member-detail__delete .popover-btn--cancel {
-    background: rgba(255, 255, 255, 0.08);
-    color: #e5e7eb;
 }
 
 .member-detail__delete .popover-btn--danger {

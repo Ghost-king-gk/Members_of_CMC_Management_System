@@ -77,6 +77,85 @@ function fillMemberDetailTemplate(template, model) {
     });
 }
 
+// 让 “删除 / 晋升 / 降级” 这种小弹出框复用同一套绑定逻辑
+let activePopoverCloser = null;
+
+function bindInlinePopover({container,toggleSelector,popoverSelector,cancelSelector,confirmSelector,onConfirm}) {
+    //弹出框绑定逻辑
+    if (!container) return;
+
+    const toggleBtn = container.querySelector(toggleSelector);
+    const popover = container.querySelector(popoverSelector);
+    const cancelBtn = cancelSelector ? container.querySelector(cancelSelector) : null;
+    const confirmBtn = confirmSelector ? container.querySelector(confirmSelector) : null;
+
+    if (!toggleBtn || !popover) return;
+
+    let removeDocListener = null;
+
+    const close = () => {
+        popover.hidden = true;
+        toggleBtn.setAttribute('aria-expanded', 'false');
+
+        if (removeDocListener) {
+            removeDocListener();
+            removeDocListener = null;
+        }
+
+        if (activePopoverCloser === close) {
+            activePopoverCloser = null;
+        }
+    };
+
+    const open = () => {
+        if (activePopoverCloser && activePopoverCloser !== close) {
+            activePopoverCloser();
+        }
+
+        popover.hidden = false;
+        toggleBtn.setAttribute('aria-expanded', 'true');
+        activePopoverCloser = close;
+
+        const onDocClick = (e) => {
+            if (!container.contains(e.target)) close();
+        };
+        document.addEventListener('click', onDocClick);
+        removeDocListener = () => document.removeEventListener('click', onDocClick);
+    };
+
+    toggleBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (popover.hidden) 
+            open();
+        else 
+            close();
+    });
+
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            close();
+        });
+    }
+
+    if (confirmBtn && onConfirm) {
+        confirmBtn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            confirmBtn.disabled = true;
+            try {
+                await onConfirm({close, confirmBtn, toggleBtn, popover });
+            } finally {
+                confirmBtn.disabled = false;
+            }
+        });
+    }
+}
+
+
+
+
+
+
 async function renderMemberDetails(member) {
     /* 渲染成员详情 */
     const contentContainer = document.getElementById('memberContent');
@@ -140,84 +219,75 @@ async function renderMemberDetails(member) {
         });
     }
 
-    // 绑定“删除”弹出框逻辑（从垃圾桶右侧冒出，不是整页弹窗）
-    const deleteWrap = contentContainer.querySelector('.member-detail__delete');
-    if (deleteWrap) {
-        const toggleBtn = deleteWrap.querySelector('[data-action="toggle-delete"]');
-        const popover = deleteWrap.querySelector('[data-role="delete-popover"]');
-        const cancelBtn = deleteWrap.querySelector('[data-action="cancel-delete"]');
-        const confirmBtn = deleteWrap.querySelector('[data-action="confirm-delete"]');
-
-        let isOpen = false;
-        let removeDocListener = null;
-
-        const open = () => {
-            if (!popover || !toggleBtn) return;
-            popover.hidden = false;
-            toggleBtn.setAttribute('aria-expanded', 'true');
-            isOpen = true;
-
-            const onDocClick = (e) => {
-                if (!deleteWrap.contains(e.target)) {
-                    close();
-                }
-                    
-            };
-            document.addEventListener('click', onDocClick);
-            removeDocListener = () => document.removeEventListener('click', onDocClick);
-        };
-
-        const close = () => {
-            if (!popover || !toggleBtn) return;
-            popover.hidden = true;
-            toggleBtn.setAttribute('aria-expanded', 'false');
-            isOpen = false;
-            if (removeDocListener) {
-                removeDocListener();
-                removeDocListener = null;
-            }
-        };
-
-        if (toggleBtn) {
-            toggleBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                if (isOpen) {
-                    close();
-                }else {
-                    open();
-                }
-            });
-        }
-
-        if (cancelBtn) {
-            cancelBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
+    // Promote popover
+    bindInlinePopover({
+        container: contentContainer.querySelector('.member-detail__promote'),
+        toggleSelector: '[data-action="toggle-promote"]',
+        popoverSelector: '[data-role="promote-popover"]',
+        cancelSelector: '[data-action="cancel-promote"]',
+        confirmSelector: '[data-action="confirm-promote"]',
+        onConfirm: async ({ close }) => {
+            try {
+                await api.promoteMember(member.id);
+                await api.exportMembers();
+                await refreshMemberList();
+                close(); // 关闭弹窗并清理事件监听
+                const updated = await api.fetchMemberById(member.id);
+                await renderMemberDetails(updated);
+            } catch (err) {
+                console.error(err);
                 close();
-            });
+                alert('Promote failed: ' + (err && err.message ? err.message : err));
+            }
         }
+    });
 
-        if (confirmBtn) {
-            confirmBtn.addEventListener('click', async (e) => {
-                e.stopPropagation();
-                confirmBtn.disabled = true;
-                try {
-                    await api.deleteMember(member.id);
-                    console.log('Member has been deleted:', member.id);
-                    await api.exportMembers();
-
-                    refreshMemberList();
-
-                    contentContainer.innerHTML = '<section class="content__card"><h2>Member deleted</h2><p>Please select a member from the left.</p></section>';
-                } catch (err) {
-                    console.error(err);
-                    close();
-                    alert('Delete failed: ' + (err && err.message ? err.message : err));
-                } finally {
-                    confirmBtn.disabled = false;
-                }
-            });
+    // Demote popover
+    bindInlinePopover({
+        container: contentContainer.querySelector('.member-detail__demote'),
+        toggleSelector: '[data-action="toggle-demote"]',
+        popoverSelector: '[data-role="demote-popover"]',
+        cancelSelector: '[data-action="cancel-demote"]',
+        confirmSelector: '[data-action="confirm-demote"]',
+        onConfirm: async ({ close }) => {
+            try {
+                await api.demoteMember(member.id);
+                await api.exportMembers();
+                await refreshMemberList();
+                close(); // 关闭弹窗并清理事件监听
+                const updated = await api.fetchMemberById(member.id);
+                await renderMemberDetails(updated);
+            } catch (err) {
+                console.error(err);
+                close();
+                alert('Demote failed: ' + (err && err.message ? err.message : err));
+            }
         }
-    }
+    });
+
+    // Delete popover
+    bindInlinePopover({
+        container: contentContainer.querySelector('.member-detail__delete'),
+        toggleSelector: '[data-action="toggle-delete"]',
+        popoverSelector: '[data-role="delete-popover"]',
+        cancelSelector: '[data-action="cancel-delete"]',
+        confirmSelector: '[data-action="confirm-delete"]',
+        onConfirm: async ({ close }) => {
+            try {
+                await api.deleteMember(member.id);
+                console.log('Member has been deleted:', member.id);
+                await api.exportMembers();
+                await refreshMemberList();
+
+                close();
+                contentContainer.innerHTML = '<section class="content__card"><h2>Member deleted</h2><p>Please select a member from the left.</p></section>';
+            } catch (err) {
+                console.error(err);
+                close();
+                alert('Delete failed: ' + (err && err.message ? err.message : err));
+            }
+        }
+    });
 }
 
 
