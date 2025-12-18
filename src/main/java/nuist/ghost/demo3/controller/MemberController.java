@@ -35,6 +35,39 @@ public class MemberController {
         return memberService.getMemberByID(id);
     }
 
+    @GetMapping("/name/{name}")
+    public List<Member> getMembersByName(@PathVariable String name) {
+        return memberService.getMembersByName(name);
+    }
+
+    @GetMapping("/student-id/{studentID}")
+    public Member getMemberByStudentID(@PathVariable String studentID) {
+        return memberService.getMemberByStudentID(studentID);
+    }
+
+    @GetMapping("/probation/official")
+    public List<Member> getOfficialMembers() {
+        return memberService.getMembersByIsProbation(false);
+    }
+
+    @GetMapping("/probation/intern")
+    public List<Member> getProbationMembers() {
+        return memberService.getMembersByIsProbation(true);
+    }
+
+    @GetMapping("/internship-score-greater-than/{score}")
+    public List<Member> getMembersByInternshipScoreGreaterThan(@PathVariable double score) {
+        return memberService.getMembersByInternshipScoreGreaterThan(score);
+    }
+
+    @GetMapping("/position/{position}")
+    public List<Member> getMembersByPositon(@PathVariable String position){
+        return memberService.getMembersByPositon(position);
+    }
+
+
+
+
     @PostMapping //创建成员 Create Member
     public Member createMember(@RequestBody CreateMemberRequest request) {
         return memberService.createMember(request);

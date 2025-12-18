@@ -1,4 +1,10 @@
 package nuist.ghost.demo3.utils;
+/**
+ * @author Chuhang Zhang
+ * @date 2020/8/11
+ * @description A set of utilities for JSON serialization and deserialization.
+ *              Supported by Jackson library.
+ */
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;

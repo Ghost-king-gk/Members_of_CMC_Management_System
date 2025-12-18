@@ -1,5 +1,10 @@
 package nuist.ghost.demo3.entities;
-
+/**
+ * @EntiesLayer - Member Abstract Class
+ * @author Ximing Chen
+ * @discription Simplified by Tips from IntelliJ IDEA
+ *              Using Lombok to generate Getters and Setters Methods which was added after java 14
+ */
 
 import lombok.Getter;
 import lombok.Setter;

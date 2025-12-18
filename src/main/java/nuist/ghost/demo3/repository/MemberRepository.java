@@ -1,4 +1,8 @@
 package nuist.ghost.demo3.repository;
+/**
+ * Store Member Info 储存成员信息
+ * @author   Kai Cai 蔡凯
+ */
 
 import nuist.ghost.demo3.entities.Member;
 import org.springframework.stereotype.Repository;
@@ -11,6 +15,7 @@ import java.util.stream.Collectors;
 
 @Repository
 public class MemberRepository {
+
     private final CopyOnWriteArrayList<Member> store = new CopyOnWriteArrayList<>();
     private long nextAvailableId() {
         /*Get the minimum Available ID*/
@@ -72,6 +77,10 @@ public class MemberRepository {
         return store.stream().filter(m -> m.getInternshipScore() > score).collect(Collectors.toList());
     }
 
+    public List<Member> findByMemberType(String position) {
+        return store.stream().filter(m -> m.getMemberType().equals(position)).collect(Collectors.toList());
+    }
+
     public void deleteById(Long id) {
         store.removeIf(m -> m.getId() != null && m.getId().equals(id));
     }
@@ -85,4 +94,6 @@ public class MemberRepository {
     public void deleteAll() {
         store.clear();
     }
+
+
 }

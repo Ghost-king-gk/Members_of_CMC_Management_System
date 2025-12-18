@@ -1,4 +1,8 @@
 package nuist.ghost.demo3.exception;
+/**
+ * @author Ximing Chen 陈玺ming
+ * @discription 全局异常处理
+ */
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

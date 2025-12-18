@@ -1,5 +1,10 @@
 package nuist.ghost.demo3.service;
-
+/**
+ * @Service Layer for managing Member entities.
+ * @author   Xuyang Zhou 周徐旸 for functions
+ * @author   Chuhang Zhang 张初航 for framework
+ * @description
+ */
 
 import nuist.ghost.demo3.dto.CreateMemberRequest;
 import nuist.ghost.demo3.dto.UpdateMemberRequest;
@@ -11,6 +16,7 @@ import nuist.ghost.demo3.exception.DuplicateStudentIDException;
 import nuist.ghost.demo3.exception.NotFoundException;
 import nuist.ghost.demo3.repository.MemberRepository;
 import nuist.ghost.demo3.utils.JsonUtils;
+import nuist.ghost.demo3.utils.SortUtils;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.Path;
@@ -52,6 +58,17 @@ public class MemberService {
         return memberRepository.save(member);
     }
 
+    private Double parseScore(String value, String fieldName) {
+        if (value == null || value.trim().isEmpty()) {
+            return null;
+        }
+        try {
+            return Double.parseDouble(value.trim());
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException(fieldName + " must be a valid number.");
+        }
+    }
+
     public Member createMember(CreateMemberRequest request) {
         if (request == null) {
             throw new IllegalArgumentException("request cannot be null.");
@@ -75,9 +92,27 @@ public class MemberService {
         if (request.email() != null) member.setEmail(request.email());
         if (request.phoneNumber() != null) member.setPhoneNumber(request.phoneNumber());
         if (request.isProbation() != null) member.setProbation(request.isProbation());
-        if (request.interviewScore() != null) member.setInterviewScore(request.interviewScore());
-        if (request.internshipScore() != null) member.setInternshipScore(request.internshipScore());
-        if (request.salaryScore() != null) member.setSalaryScore(request.salaryScore());
+        
+        Double interviewScore = parseScore(request.interviewScore(), "Interview Score");
+        if (interviewScore != null) {
+            if(interviewScore >= 0  &&  interviewScore <= 15) {
+                member.setInterviewScore(interviewScore);
+            }else throw new IllegalArgumentException("Interview score must be between 0 and 15.");
+        }
+        
+        Double internshipScore = parseScore(request.internshipScore(), "Internship Score");
+        if (internshipScore != null) {
+            if(internshipScore >=0 && internshipScore <= 20) {
+                member.setInternshipScore(internshipScore);
+            }else throw new IllegalArgumentException("Internship score must be between 0 and 20.");
+        }
+        
+        Double salaryScore = parseScore(request.salaryScore(), "Salary Score");
+        if (salaryScore != null) {
+            if(salaryScore >=0 && salaryScore <= 5500) {
+                member.setSalaryScore(salaryScore);
+            }else throw new IllegalArgumentException("Salary score must be between 0 and 5500.");
+        }
 
         return createMember(member);
     }
@@ -114,6 +149,11 @@ public class MemberService {
         return memberRepository.findByInternshipScoreGreaterThan(score);
     }
 
+    public List<Member> getMembersByPositon(String position){
+        /*通过职位获取成员*/
+        return memberRepository.findByMemberType(position);
+    }
+
 
     public Member updateMember(Long id, UpdateMemberRequest request){
         /*更新成员（业务层统一处理不存在）*/
@@ -142,16 +182,25 @@ public class MemberService {
             member.setProbation(request.isProbation());
         }
 
-        if (request.interviewScore() != null) {
-            member.setInterviewScore(request.interviewScore());
+        Double interviewScore = parseScore(request.interviewScore(), "Interview Score");
+        if (interviewScore != null) {
+            if(interviewScore >= 0  &&  interviewScore <= 15) {
+                member.setInterviewScore(interviewScore);
+            }else throw new IllegalArgumentException("Interview score must be between 0 and 15.");
         }
 
-        if (request.internshipScore() != null) {
-            member.setInternshipScore(request.internshipScore());
+        Double internshipScore = parseScore(request.internshipScore(), "Internship Score");
+        if (internshipScore != null) {
+            if(internshipScore >=0 && internshipScore <= 20) {
+                member.setInternshipScore(internshipScore);
+            }else throw new IllegalArgumentException("Internship score must be between 0 and 20.");
         }
 
-        if (request.salaryScore() != null) {
-            member.setSalaryScore(request.salaryScore());
+        Double salaryScore = parseScore(request.salaryScore(), "Salary Score");
+        if (salaryScore != null) {
+            if(salaryScore >=0 && salaryScore <= 5500) {
+                member.setSalaryScore(salaryScore);;
+            }else throw new IllegalArgumentException("Salary score must be between 0 and 5500.");
         }
 
         return memberRepository.save(member);
@@ -234,8 +283,19 @@ public class MemberService {
         }
     }
 
+    public void sortMembersByStudentID(List<Member> members) {
+        List<Member> sortedMembers = SortUtils.quickSortByID(members);
+        memberRepository.deleteAll();
+        memberRepository.saveAll(sortedMembers);
+        exportMembersToJson();
+    }
+
 
     public void createSampleData() {
+        /*
+         * 创建样本数据
+         * Built by Ximing Chen
+         */
         Member member1 = new RegularMember("张三", "202100100000");
         member1.setInterviewScore(85.0);
 
@@ -252,4 +312,16 @@ public class MemberService {
     }
 
 
+    public void regularizeMember(Long id) {
+        Member member = getMemberByID(id);
+        if (member.isProbation()) {
+            member.setProbation(false);
+            double initSalaryScore = member.getInternshipScore() * 10;
+            member.setSalaryScore(initSalaryScore);
+            member.setInternshipScore(0);
+            memberRepository.save(member);
+        } else {
+            throw new IllegalArgumentException("Member is not on probation: id=" + id);
+        }
+    }
 }
