@@ -1,4 +1,4 @@
-export { fetchMemberById, fetchMemberList, createMember, updateMember, deleteMember, exportMembers, promoteMember, demoteMember };
+export { fetchMemberById, fetchMemberList, createMember, updateMember, deleteMember, exportMembers, promoteMember, demoteMember, fetchMemberByName, fetchMemberByIsProbation, fetchMemberByInternshipScoreGreaterThan, fetchMembersByPosition, fetchMemberByStudentID, regularizeMember };
 
 const API_BASE = '/api';
 const MEMBERS_BASE = API_BASE + '/members';
@@ -69,6 +69,7 @@ async function request(url, options = {}) {
  * 通常只需要 id 和 name 字段
  */
 async function fetchMemberList() {
+    await request(ADMIN_MEMBERS_BASE + '/sort-by-id' , { method: 'POST' });
     return request(MEMBERS_BASE);
 }
 
@@ -76,34 +77,76 @@ async function fetchMemberById(id) {
     return request(MEMBERS_BASE + '/' + encodeURIComponent(id));
 }
 
+async function fetchMemberByName(name) {
+    return request(MEMBERS_BASE + '/name/' + encodeURIComponent(name));
+}
+
+async function fetchMemberByStudentID(studentID) {
+    return request(MEMBERS_BASE + '/student-id/' + encodeURIComponent(studentID));
+}
+
+async function fetchMemberByIsProbation(isProbation) {
+    if (isProbation == true) {
+        return request(MEMBERS_BASE + '/probation/intern');
+    } else {
+        return request(MEMBERS_BASE + '/probation/official');
+    }
+}
+
+async function fetchMemberByInternshipScoreGreaterThan(score) {
+    return request(MEMBERS_BASE + '/internship-score-greater-than/' + encodeURIComponent(score));
+}
+
+async function fetchMembersByPosition(position) {
+    return request(MEMBERS_BASE + '/position/' + encodeURIComponent(position));
+}
+
 async function createMember(data) {
-    return request(MEMBERS_BASE, {
+    const r = await request(MEMBERS_BASE, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
     });
+    await request(ADMIN_MEMBERS_BASE + '/sort-by-id' , { method: 'POST' });
+    return r;
 }
 
 async function deleteMember(id) {
-    return request(MEMBERS_BASE + '/' + encodeURIComponent(id), { method: 'DELETE' });
+    const r = await request(MEMBERS_BASE + '/' + encodeURIComponent(id) , { method: 'DELETE' });
+    await request(ADMIN_MEMBERS_BASE + '/sort-by-id' , { method: 'POST' });
+    return r
 }
 
 async function exportMembers() {
-    return request(ADMIN_MEMBERS_BASE + '/export', { method: 'POST' });
+    const r = await request(ADMIN_MEMBERS_BASE + '/export', { method: 'POST' });
+    await request(ADMIN_MEMBERS_BASE + '/sort-by-id' , { method: 'POST' });
+    return r;
 }
 
 async function promoteMember(id) {
-    return request(ADMIN_MEMBERS_BASE + '/' + encodeURIComponent(id) + '/promote', { method: 'POST' });
+    const r = await request(ADMIN_MEMBERS_BASE + '/' + encodeURIComponent(id) + '/promote', { method: 'POST' });
+    await request(ADMIN_MEMBERS_BASE + '/sort-by-id' , { method: 'POST' });
+    return r;
 }
 
 async function demoteMember(id) {
-    return request(ADMIN_MEMBERS_BASE + '/' + encodeURIComponent(id) + '/demote', { method: 'POST' });
+    const r = await request(ADMIN_MEMBERS_BASE + '/' + encodeURIComponent(id) + '/demote', { method: 'POST' });
+    await request(ADMIN_MEMBERS_BASE + '/sort-by-id' , { method: 'POST' });
+    return r;
 }
 
 async function updateMember(id, data) {
-    return request(MEMBERS_BASE + '/' + encodeURIComponent(id), {
+    const r = await request(MEMBERS_BASE + '/' + encodeURIComponent(id), {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
     });
+    await request(ADMIN_MEMBERS_BASE + '/sort-by-id', { method: 'POST' });
+    return r;
+}
+
+async function regularizeMember(id) {
+    const r = await request(ADMIN_MEMBERS_BASE + '/' + encodeURIComponent(id) + '/regularize', { method: 'POST' });
+    await request(ADMIN_MEMBERS_BASE + '/sort-by-id' , { method: 'POST' });
+    return r;
 }

@@ -98,6 +98,14 @@ body{
     opacity: 0;
     animation: buttonSlideIn 0.5s ease forwards;
 }
+.sidebar__icon-filter{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    margin-bottom: 12px;
+}
 
 
 .content__card{

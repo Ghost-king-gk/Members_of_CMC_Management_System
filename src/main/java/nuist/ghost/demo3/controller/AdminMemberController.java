@@ -1,6 +1,11 @@
 package nuist.ghost.demo3.controller;
+/**
+ * @author Chuhang 张初航
+ * @discription 管理员成员管理控制器 provide all the API for front-end
+ */
 
 import nuist.ghost.demo3.service.MemberService;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,6 +50,18 @@ public class AdminMemberController {
     @PostMapping("/{id}/demote")
     public ResponseEntity<Void> demoteMembers(@PathVariable Long id) {
         memberService.demoteMember(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{id}/regularize")
+    public ResponseEntity<Void> regularizeMember(@PathVariable Long id) {
+        memberService.regularizeMember(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/sort-by-id")
+    public ResponseEntity<Void> sortMembersByStudentID() {
+        memberService.sortMembersByStudentID(memberService.getAllMembers());
         return ResponseEntity.noContent().build();
     }
 }

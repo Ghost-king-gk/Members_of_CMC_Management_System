@@ -6,6 +6,10 @@
     <title>Member Menu</title>
     <link rel="stylesheet" href="./styles/style.css" />
     <link rel="stylesheet" href="./styles/detail.css" />
+    <link rel="stylesheet" href="./styles/selector_art.css" />
+    <link rel="stylesheet" href="./styles/selector_input.css" />
+    <link rel="stylesheet" href="./styles/search_input.css" />
+    <link rel="stylesheet" href="./styles/regularize.css" />
     <script type="module" src="./scripts/menu.js" defer></script>
   </head>
   <body>
@@ -25,7 +29,72 @@
 
             <h2 class="sidebar__title">Member List</h2>
           </div>
+
           <button id="addMemberBtn" class="sidebar__add-btn"> ＋ Add Member</button>
+
+          <!-- Regularize Button Container (Hidden by default) -->
+          <div id="regularizeContainer" class="sidebar__regularize-container">
+            <button id="regularizeBtn" class="sidebar__regularize-btn">
+               Regularize These Members
+            </button>
+            
+            <!-- Popover -->
+            <div class="regularize-popover" id="regularizePopover" hidden>
+                <div class="regularize-popover__title">Regularize these members?</div>
+                <div class="regularize-popover__hint">These members will be regularized, and their internship scores will be reset to 0 and converted to salary scores.</div>
+                <div class="regularize-popover__actions">
+                    <div id="regularize-result"></div>
+                    <button type="button" class="popover-btn popover-btn--cancel" id="cancelRegularizeBtn">Cancel</button>
+                    <button type="button" class="popover-btn popover-btn--danger" id="confirmRegularizeBtn">Confirm</button>
+                </div>
+            </div>
+          </div>
+
+          <div class="sidebar__icon-filter">
+            <button id="filterBtn" class="sidebar__filter-btn" title="Filter Members">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="3 4 21 4 14 12 14 19 10 21 10 12 3 4"></polygon>
+              </svg>
+            </button>
+
+            <div class="sidebar__filter-selector" id="filterSelector">
+              <div class="sidebar__filter-selector-selected">
+                <span id="filterConditionLabel">All Members</span>
+                <!-- Arrow Icon -->
+                <svg class="sidebar__filter-selector-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </div>
+              <div class="sidebar__filter-selector-options sidebar__filter-selector-hide">
+                <div data-value="All">All Members</div>
+                <div data-value="Official">Official</div>
+                <div data-value="Intern">Intern</div>
+                <div data-value="InternScore>">InternScore &gt;</div>
+                <div data-value="President">President</div>
+                <div data-value="SectionHead">SectionHead</div>
+                <div data-value="RegularMember">RegularMember</div>
+                <div data-value="SearchByName">Search by Name</div>
+                <div data-value="SearchByID">Search by ID(inner)</div>
+                <div data-value="SearchByStudentID">Search by StudentID</div>
+              </div>
+            </div>
+
+            <!-- Hidden Input for Score -->
+            <input type="number" id="filterInput" class="sidebar__filter-input" placeholder="0-20" min="0" max="20">
+          </div>
+
+          <!-- Search Input Container (Hidden by default) -->
+          <div id="searchContainer" class="sidebar__search-container">
+            <input type="text" id="searchInput" class="sidebar__search-input" placeholder="Type to search...">
+            <button id="searchBtn" class="sidebar__search-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </button>
+          </div>
+
+          
         </div>
         <ul id="memberList" class="member-list">
         </ul>

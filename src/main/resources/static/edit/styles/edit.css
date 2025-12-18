@@ -54,3 +54,10 @@
     font-weight: 600;
     color: #93c5fd;
 }
+
+/* Shake animation for input errors */
+.input-shake {
+    border-color: #ef4444 !important;
+    animation: shake 1s cubic-bezier(.36,.07,.19,.97) both;
+}
+

@@ -174,9 +174,9 @@ function collectFormData() {
         email: emailInput.value.trim() || null,
         probation,
         isProbation: probation,
-        interviewScore: interviewScoreInput.value !== '' ? Number(interviewScoreInput.value) : null,
-        internshipScore: internshipScoreInput.value !== '' ? Number(internshipScoreInput.value) : null,
-        salaryScore: salaryScoreInput.value !== '' ? Number(salaryScoreInput.value) : null
+        interviewScore: interviewScoreInput.value !== '' ? interviewScoreInput.value : null,
+        internshipScore: internshipScoreInput.value !== '' ? internshipScoreInput.value : null,
+        salaryScore: salaryScoreInput.value !== '' ? salaryScoreInput.value : null
     };
 }
 
@@ -211,7 +211,35 @@ async function handleSubmit(event) {
         }, 800);
     } catch (error) {
         console.error(error);
-        showError(error && error.message ? error.message : 'Failed to save member.');
+        const errorMessage = error && error.message ? error.message : 'Failed to save member.';
+        showError(errorMessage);
+
+        // Helper to highlight input
+        const highlightInput = (input) => {
+            if (input) {
+                input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                input.classList.add('input-shake');
+                setTimeout(() => input.classList.remove('input-shake'), 1000);
+            }
+        };
+
+        // Check for specific errors
+        if (errorMessage.includes("Name cannot be null or empty")) {
+            highlightInput(nameInput);
+        }
+        // StudentID is usually not editable in update, but if it were:
+        if (errorMessage.includes("StudentID") || errorMessage.includes("studentID")) {
+            highlightInput(studentIDInput);
+        }
+        if (errorMessage.includes("Interview Score") || errorMessage.includes("Interview score")) {
+            highlightInput(interviewScoreInput);
+        }
+        if (errorMessage.includes("Internship Score") || errorMessage.includes("Internship score")) {
+            highlightInput(internshipScoreInput);
+        }
+        if (errorMessage.includes("Salary Score") || errorMessage.includes("Salary score")) {
+            highlightInput(salaryScoreInput);
+        }
     }
 }
 

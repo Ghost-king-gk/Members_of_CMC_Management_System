@@ -1,4 +1,10 @@
 package nuist.ghost.demo3.dto;
+/**
+ * @author Chuhang Zhang
+ * @description 创建成员请求的数据传输对象
+ * A new feature after java 17:  Record
+ * A naive trial. I need more practice and learning to master it.
+ */
 
 public record CreateMemberRequest(
         String name,
@@ -7,9 +13,9 @@ public record CreateMemberRequest(
         String email,
         String phoneNumber,
         Boolean isProbation,
-        Double interviewScore,
-        Double internshipScore,
-        Double salaryScore
+        String interviewScore,
+        String internshipScore,
+        String salaryScore
 ) {
 }
 //dto: data transfer object
