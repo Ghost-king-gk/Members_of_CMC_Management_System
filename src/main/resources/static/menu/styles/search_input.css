@@ -1,0 +1,72 @@
+/* --- Search Container --- */
+.sidebar__search-container {
+    width: 100%;
+    height: 0; /* Hidden by default */
+    opacity: 0;
+    overflow: hidden;
+    margin-top: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Show State */
+.sidebar__search-container.show {
+    height: 42px;
+    opacity: 1;
+    margin-top: -20px; /* Negative margin to counteract parent gap and previous sibling margin */
+    margin-bottom: 4px;
+}
+
+/* --- Search Input (Light Blue Theme) --- */
+.sidebar__search-input {
+    flex: 1;
+    height: 100%;
+    background: rgba(59, 130, 246, 0.1); /* Blue-500 tint */
+    border: 1px solid rgba(96, 165, 250, 0.3); /* Blue-400 border */
+    border-radius: 8px;
+    padding: 0 12px;
+    color: #bfdbfe; /* Blue-200 text */
+    font-size: 14px;
+    outline: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar__search-input::placeholder {
+    color: rgba(191, 219, 254, 0.4); /* Blue-200 with opacity */
+    font-style: italic;
+}
+
+.sidebar__search-input:focus {
+    background: rgba(59, 130, 246, 0.15);
+    border-color: #60a5fa; /* Blue-400 */
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+/* --- Search Button --- */
+.sidebar__search-btn {
+    width: 42px;
+    height: 42px;
+    background: linear-gradient(135deg, #3b82f6, #2563eb); /* Blue gradient */
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 5px rgba(37, 99, 235, 0.3);
+}
+
+.sidebar__search-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+    filter: brightness(1.1);
+}
+
+.sidebar__search-btn:active {
+    transform: translateY(0);
+}

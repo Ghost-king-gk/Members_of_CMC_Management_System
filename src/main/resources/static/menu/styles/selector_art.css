@@ -1,0 +1,123 @@
+
+/* --- Filter Button Art Style --- */
+.sidebar__filter-btn {
+    background: linear-gradient(135deg, #3b424c, #2b303b);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #a0a0a0;
+    
+    /* Square Shape */
+    width: 42px;
+    height: 42px;
+    padding: 0; /* Center icon */
+    
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    flex-shrink: 0; /* Prevent shrinking */
+}
+
+.sidebar__filter-btn:hover {
+    color: #fbbf24; /* Amber-400 */
+    border-color: rgba(251, 191, 36, 0.4);
+    box-shadow: 0 0 10px rgba(251, 191, 36, 0.2);
+    transform: translateY(-1px);
+}
+
+.sidebar__filter-btn:active {
+    transform: translateY(0);
+}
+
+/* --- Sidebar Filter Selector (Art Style) --- */
+.sidebar__filter-selector {
+    position: relative;
+    font-family: inherit;
+    flex: 1; /* Fill remaining space (Rectangle) */
+}
+
+.sidebar__filter-selector-selected {
+    height: 42px; /* Match button height */
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(245, 158, 11, 0.05)); /* Amber tint */
+    color: #fbbf24; /* Amber-400 */
+    padding: 0 12px;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    border-radius: 8px;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar__filter-selector-selected:hover {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(245, 158, 11, 0.1));
+    border-color: rgba(245, 158, 11, 0.6);
+    box-shadow: 0 0 12px rgba(245, 158, 11, 0.25);
+    transform: translateY(-1px);
+}
+
+/* Arrow Icon Animation */
+.sidebar__filter-selector-arrow {
+    transition: transform 0.3s ease;
+}
+
+.sidebar__filter-selector-selected.open .sidebar__filter-selector-arrow {
+    transform: rotate(180deg);
+}
+
+/* Dropdown Items Container */
+.sidebar__filter-selector-options {
+    position: absolute;
+    background-color: #2b303b;
+    border: 1px solid rgba(245, 158, 11, 0.4);
+    border-radius: 8px;
+    top: 110%; /* Slight gap */
+    left: 0;
+    right: 0;
+    z-index: 99;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Hide state */
+.sidebar__filter-selector-hide {
+    display: none;
+    opacity: 0;
+    transform: translateY(-10px);
+}
+
+/* Individual Option Options */
+.sidebar__filter-selector-options div {
+    color: #d1d5db;
+    padding: 10px 12px;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 13px;
+    transition: background 0.2s;
+}
+
+.sidebar__filter-selector-options div:last-child {
+    border-bottom: none;
+}
+
+.sidebar__filter-selector-options div:hover {
+    background-color: rgba(245, 158, 11, 0.15);
+    color: #fbbf24;
+}
+
+/* Selected Item Highlight (Optional, requires JS to toggle class) */
+.sidebar__filter-selector-options div.same-as-selected {
+    background-color: rgba(245, 158, 11, 0.1);
+    color: #fbbf24;
+    font-weight: bold;
+}

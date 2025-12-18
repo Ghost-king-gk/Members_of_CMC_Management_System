@@ -1,0 +1,65 @@
+
+/* --- Filter Input (Hidden by default) --- */
+.sidebar__filter-input {
+    width: 0;
+    height: 42px;
+    padding: 0;
+    border: none;
+    background: #2b303b;
+    color: #fbbf24;
+    border-radius: 8px;
+    outline: none;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none; /* Prevent interaction when hidden */
+}
+
+/* Visible State for Input */
+.sidebar__filter-input.show {
+    width: 60px;
+    padding: 0 8px;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    opacity: 1;
+    margin-left: 8px; /* Gap between selector and input */
+    pointer-events: auto;
+}
+
+.sidebar__filter-input:focus {
+    border-color: #fbbf24;
+    box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+}
+
+/* Placeholder Style */
+.sidebar__filter-input::placeholder {
+    color: rgba(255, 255, 255, 0.2);
+    font-size: 12px;
+}
+
+/* Customize Spinners (Arrows) */
+.sidebar__filter-input {
+    color-scheme: dark; /* Use dark theme for native controls */
+}
+
+.sidebar__filter-input::-webkit-inner-spin-button,
+.sidebar__filter-input::-webkit-outer-spin-button {
+  opacity: 0.3;
+  transition: opacity 0.2s;
+  cursor: pointer;
+}
+
+.sidebar__filter-input:hover::-webkit-inner-spin-button,
+.sidebar__filter-input:hover::-webkit-outer-spin-button {
+  opacity: 1;
+}
+
+
+/* Adjust text in compact mode if needed */
+.sidebar__filter-selector.compact .sidebar__filter-selector-selected span {
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

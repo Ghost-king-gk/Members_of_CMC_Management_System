@@ -1,0 +1,88 @@
+/* --- Regularize Container --- */
+.sidebar__regularize-container {
+    width: 100%;
+    height: 0;
+    opacity: 0;
+    overflow: visible; /* Allow popover to overflow */
+    margin-top: 0;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative; /* For popover positioning */
+    z-index: 100;
+}
+
+.sidebar__regularize-container.show {
+    height: 42px;
+    opacity: 1;
+    margin-top: 12px;
+    margin-bottom: 4px;
+}
+
+/* --- Regularize Button (Red Theme) --- */
+.sidebar__regularize-btn {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #ef4444, #dc2626); /* Red gradient */
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 5px rgba(220, 38, 38, 0.3);
+}
+
+.sidebar__regularize-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
+    filter: brightness(1.1);
+}
+
+.sidebar__regularize-btn:active {
+    transform: translateY(0);
+}
+
+/* --- Regularize Popover --- */
+.regularize-popover {
+    position: absolute;
+    top: 110%;
+    left: 0;
+    width: 280px; /* Wider for text */
+    background: #2b303b;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    z-index: 101;
+    animation: popoverFadeIn 0.2s ease forwards;
+}
+
+.regularize-popover[hidden] {
+    display: none;
+}
+
+.regularize-popover__title {
+    color: #fca5a5; /* Red-300 */
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.regularize-popover__hint {
+    color: #9ca3af;
+    font-size: 13px;
+    margin-bottom: 16px;
+    line-height: 1.4;
+}
+
+.regularize-popover__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+@keyframes popoverFadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
