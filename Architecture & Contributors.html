@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Architecture & Contribution Map</title>
+    <style>
+        :root {
+            --bg-color: #1e1e2e;
+            --text-color: #cdd6f4;
+            --card-bg: #313244;
+            --arrow-color: #6c7086;
+            
+            /* Author Colors */
+            --color-chuhang: #a6e3a1; /* Green */
+            --color-xuyang: #89b4fa;  /* Blue */
+            --color-kaicai: #fab387;  /* Orange */
+            --color-ximing: #cba6f7;  /* Purple */
+            --color-ai: #f9e2af;      /* Yellow */
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            margin-bottom: 40px;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        .legend {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 40px;
+            background: var(--card-bg);
+            padding: 15px 30px;
+            border-radius: 50px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+
+        .legend-item:hover, .legend-item.active {
+            opacity: 1;
+            font-weight: bold;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* Changed to 4 columns */
+            gap: 30px;
+            max-width: 1400px; /* Increased width */
+            width: 100%;
+            position: relative;
+        }
+
+        .layer {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+            border: 1px dashed #45475a;
+            border-radius: 12px;
+            position: relative;
+        }
+
+        .layer-title {
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: var(--bg-color);
+            padding: 0 10px;
+            font-size: 0.8rem;
+            color: #9399b2;
+            text-transform: uppercase;
+        }
+
+        .node {
+            background: var(--card-bg);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 5px solid transparent;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            z-index: 2;
+        }
+
+        .node:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0,0,0,0.3);
+        }
+
+        .node h3 {
+            margin: 0 0 5px 0;
+            font-size: 1rem;
+        }
+
+        .node p {
+            margin: 0;
+            font-size: 0.8rem;
+            color: #a6adc8;
+        }
+
+        .author-tag {
+            display: inline-block;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-top: 8px;
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* Connections (SVG) */
+        #connections {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        path {
+            fill: none;
+            stroke: var(--arrow-color);
+            stroke-width: 2;
+            opacity: 0.3;
+            transition: stroke 0.3s, opacity 0.3s;
+        }
+
+        /* Specific Author Styles */
+        .author-chuhang { border-color: var(--color-chuhang); }
+        .author-chuhang .author-tag { color: var(--color-chuhang); }
+        
+        .author-xuyang { border-color: var(--color-xuyang); }
+        .author-xuyang .author-tag { color: var(--color-xuyang); }
+
+        .author-kaicai { border-color: var(--color-kaicai); }
+        .author-kaicai .author-tag { color: var(--color-kaicai); }
+
+        .author-ximing { border-color: var(--color-ximing); }
+        .author-ximing .author-tag { color: var(--color-ximing); }
+
+        /* Mixed Authors */
+        .author-mixed { 
+            border-left-width: 5px;
+            border-image: linear-gradient(to bottom, var(--color-chuhang), var(--color-xuyang)) 1 100%;
+        }
+
+        /* Frontend Special */
+        .author-frontend {
+            border-left-width: 5px;
+            border-image: linear-gradient(to bottom, var(--color-chuhang), var(--color-ai)) 1 100%;
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>System Architecture & Contributors</h1>
+
+    <div class="legend">
+        <div class="legend-item" data-author="chuhang" onclick="highlight('chuhang')">
+            <div class="dot" style="background: var(--color-chuhang)"></div> Chuhang Zhang (Controller/Framework)
+        </div>
+        <div class="legend-item" data-author="xuyang" onclick="highlight('xuyang')">
+            <div class="dot" style="background: var(--color-xuyang)"></div> Xuyang Zhou (Service Logic/Algo)
+        </div>
+        <div class="legend-item" data-author="kaicai" onclick="highlight('kaicai')">
+            <div class="dot" style="background: var(--color-kaicai)"></div> Kai Cai (Repository/Data)
+        </div>
+        <div class="legend-item" data-author="ximing" onclick="highlight('ximing')">
+            <div class="dot" style="background: var(--color-ximing)"></div> Ximing Chen (Entities/Exception)
+        </div>
+        <div class="legend-item" data-author="ai" onclick="highlight('ai')">
+            <div class="dot" style="background: var(--color-ai)"></div> AI Tutors (Guidance)
+        </div>
+    </div>
+
+    <div class="container">
+        <svg id="connections"></svg>
+
+        <!-- Column 0: Client Layer -->
+        <div class="layer">
+            <div class="layer-title">Client Layer</div>
+            
+            <div class="node author-frontend" id="frontend">
+                <h3>SPA Frontend</h3>
+                <p>HTML5 / CSS3 / Vanilla JS</p>
+                <div style="display: flex; flex-direction: column; gap: 2px;">
+                    <span class="author-tag" style="color: var(--color-chuhang)">Chuhang Zhang (Frontend Freshman)</span>
+                    <span class="author-tag" style="color: var(--color-ai)">Gemini/ChatGPT/Deepseek/Lingma (Guidance)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Column 1: API & DTO -->
+        <div class="layer">
+            <div class="layer-title">Presentation Layer</div>
+            
+            <div class="node author-chuhang" id="controller">
+                <h3>AdminMemberController</h3>
+                <p>REST API Endpoints</p>
+                <span class="author-tag">Chuhang Zhang</span>
+            </div>
+
+            <div class="node author-chuhang" id="dto">
+                <h3>DTOs</h3>
+                <p>Create/Update Requests</p>
+                <span class="author-tag">Chuhang Zhang</span>
+            </div>
+            
+            <div class="node author-ximing" id="exception">
+                <h3>GlobalExceptionHandler</h3>
+                <p>Centralized Error Handling</p>
+                <span class="author-tag">Ximing Chen</span>
+            </div>
+        </div>
+
+        <!-- Column 2: Service & Logic -->
+        <div class="layer">
+            <div class="layer-title">Business Layer</div>
+
+            <div class="node author-mixed" id="service">
+                <h3>MemberService</h3>
+                <p>Core Business Logic</p>
+                <div style="display: flex; gap: 5px;">
+                    <span class="author-tag" style="color: var(--color-chuhang)">Chuhang (Frame)</span>
+                    <span class="author-tag" style="color: var(--color-xuyang)">Xuyang (Func)</span>
+                </div>
+            </div>
+
+            <div class="node author-xuyang" id="sortutils">
+                <h3>SortUtils</h3>
+                <p>QuickSort Algorithm</p>
+                <span class="author-tag">Xuyang Zhou</span>
+            </div>
+            
+            <div class="node author-kaicai" id="init">
+                <h3>DataInitializer</h3>
+                <p>Sample Data Generation</p>
+                <span class="author-tag">Kai Cai</span>
+            </div>
+        </div>
+
+        <!-- Column 3: Data & Domain -->
+        <div class="layer">
+            <div class="layer-title">Data Layer</div>
+
+            <div class="node author-kaicai" id="repository">
+                <h3>MemberRepository</h3>
+                <p>In-Memory Storage & CRUD</p>
+                <span class="author-tag">Kai Cai</span>
+            </div>
+
+            <div class="node author-chuhang" id="jsonutils">
+                <h3>JsonUtils</h3>
+                <p>File Persistence</p>
+                <span class="author-tag">Chuhang Zhang</span>
+            </div>
+
+            <div class="node author-ximing" id="entity">
+                <h3>Entities</h3>
+                <p>Member, President, etc.</p>
+                <span class="author-tag">Ximing Chen</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simple logic to draw lines between nodes
+        function connect(startId, endId) {
+            const start = document.getElementById(startId);
+            const end = document.getElementById(endId);
+            const svg = document.getElementById('connections');
+
+            if (!start || !end) return;
+
+            const startRect = start.getBoundingClientRect();
+            const endRect = end.getBoundingClientRect();
+            const containerRect = document.querySelector('.container').getBoundingClientRect();
+
+            // Calculate relative coordinates
+            const x1 = startRect.right - containerRect.left;
+            const y1 = startRect.top + startRect.height / 2 - containerRect.top;
+            const x2 = endRect.left - containerRect.left;
+            const y2 = endRect.top + endRect.height / 2 - containerRect.top;
+
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            
+            // Bezier curve
+            const controlX1 = x1 + (x2 - x1) / 2;
+            const controlX2 = x2 - (x2 - x1) / 2;
+            
+            const d = `M ${x1} ${y1} C ${controlX1} ${y1}, ${controlX2} ${y2}, ${x2} ${y2}`;
+            
+            path.setAttribute('d', d);
+            path.setAttribute('marker-end', 'url(#arrowhead)');
+            svg.appendChild(path);
+        }
+
+        // Add arrow marker
+        const svg = document.getElementById('connections');
+        const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+        const marker = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
+        marker.setAttribute('id', 'arrowhead');
+        marker.setAttribute('markerWidth', '10');
+        marker.setAttribute('markerHeight', '7');
+        marker.setAttribute('refX', '9');
+        marker.setAttribute('refY', '3.5');
+        marker.setAttribute('orient', 'auto');
+        const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+        polygon.setAttribute('points', '0 0, 10 3.5, 0 7');
+        polygon.setAttribute('fill', '#6c7086');
+        marker.appendChild(polygon);
+        defs.appendChild(marker);
+        svg.appendChild(defs);
+
+        // Draw connections
+        window.addEventListener('load', () => {
+            connect('frontend', 'controller');
+            connect('controller', 'service');
+            connect('service', 'repository');
+            connect('service', 'sortutils');
+            connect('repository', 'jsonutils');
+            connect('repository', 'entity');
+            connect('dto', 'service');
+            connect('init', 'service');
+            
+            // Adjust SVG size
+            const container = document.querySelector('.container');
+            svg.setAttribute('width', container.offsetWidth);
+            svg.setAttribute('height', container.offsetHeight);
+        });
+
+        // Highlight logic
+        function highlight(author) {
+            const nodes = document.querySelectorAll('.node');
+            const items = document.querySelectorAll('.legend-item');
+            
+            // Toggle active state
+            items.forEach(item => {
+                if(item.dataset.author === author) {
+                    item.classList.toggle('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+
+            const isActive = document.querySelector(`.legend-item[data-author="${author}"].active`);
+
+            nodes.forEach(node => {
+                if (!isActive) {
+                    node.style.opacity = '1';
+                    node.style.transform = 'scale(1)';
+                    return;
+                }
+
+                // Logic for mixed nodes
+                let match = false;
+                if (node.classList.contains(`author-${author}`)) match = true;
+                
+                // Handle mixed ownership
+                if (author === 'chuhang' && (node.classList.contains('author-mixed') || node.classList.contains('author-frontend'))) match = true;
+                if (author === 'xuyang' && node.classList.contains('author-mixed')) match = true;
+                if (author === 'ai' && node.classList.contains('author-frontend')) match = true;
+
+                if (match) {
+                    node.style.opacity = '1';
+                    node.style.transform = 'scale(1.05)';
+                    node.style.zIndex = '10';
+                } else {
+                    node.style.opacity = '0.3';
+                    node.style.transform = 'scale(0.95)';
+                    node.style.zIndex = '1';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

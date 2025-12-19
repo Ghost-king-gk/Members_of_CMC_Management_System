@@ -10,6 +10,37 @@
 ### Introduction
 **Members of CMC Management System** is a comprehensive web application designed to manage member information for the CMC organization. It provides a streamlined interface for administrators to track member details, manage recruitment scores, handle promotions/demotions, and visualize member status.
 
+### Getting Started
+
+#### Prerequisites
+-   **Java 21** or higher
+-   **Maven** (Optional, wrapper included)
+
+#### Running the Application
+1.  **Clone the repository**:
+    ```bash
+    git clone <repository-url>
+    cd Members_of_CMC_Management_System
+    ```
+2.  **Run with Maven Wrapper**:
+    -   **Windows**:
+        ```powershell
+        .\mvnw spring-boot:run
+        ```
+    -   **Linux / macOS**:
+        ```bash
+        ./mvnw spring-boot:run
+        ```
+3.  **Access the Application**:
+    Open your browser and visit: [http://localhost:8080](http://localhost:8080)
+
+#### Building for Release
+To create a portable Windows application (requires `jpackage` from JDK 14+):
+```powershell
+.\package_app.ps1
+```
+The output will be in the `release/` directory.
+
 ### Technical Features
 
 #### Backend (Java / Spring Boot)
@@ -59,6 +90,37 @@ The system implements a strict hierarchical logic for member management:
 
 ### 项目简介
 **CMC 成员管理系统 (Members of CMC Management System)** 是一个用于管理 CMC 组织成员信息的全栈 Web 应用程序。它为管理员提供了一个高效的界面，用于追踪成员详情、管理考核分数、处理职位升降级以及可视化成员状态。
+
+### 快速开始
+
+#### 环境要求
+-   **Java 21** 或更高版本
+-   **Maven** (可选，已内置 Wrapper)
+
+#### 启动应用
+1.  **克隆仓库**:
+    ```bash
+    git clone <repository-url>
+    cd Members_of_CMC_Management_System
+    ```
+2.  **使用 Maven Wrapper 运行**:
+    -   **Windows**:
+        ```powershell
+        .\mvnw spring-boot:run
+        ```
+    -   **Linux / macOS**:
+        ```bash
+        ./mvnw spring-boot:run
+        ```
+3.  **访问应用**:
+    打开浏览器访问: [http://localhost:8080](http://localhost:8080)
+
+#### 构建发布版
+创建 Windows 便携版应用（需要 JDK 14+ 的 `jpackage` 支持）:
+```powershell
+.\package_app.ps1
+```
+构建产物将位于 `release/` 目录中。
 
 ### 技术特点
 
