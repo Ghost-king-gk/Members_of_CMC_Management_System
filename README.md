@@ -10,6 +10,11 @@
 ### Introduction
 **Members of CMC Management System** is a comprehensive web application designed to manage member information for the CMC organization. It provides a streamlined interface for administrators to track member details, manage recruitment scores, handle promotions/demotions, and visualize member status.
 
+### Architecture & Contributors
+For a detailed view of the system architecture and the contribution map of our team members, please view the interactive HTML file included in the repository:
+
+[View Architecture & Contributors Map](Architecture%20&%20Contributors.html)
+
 ### Getting Started
 
 #### Prerequisites
@@ -83,6 +88,9 @@ The system implements a strict hierarchical logic for member management:
     -   **Internship Score (0-20)**: Used to evaluate interns during the probation period.
     -   **Salary Score (0-5500)**: The primary metric for official members ("Gongfen").
 
+
+
+
 ---
 
 <a name="chinese"></a>
@@ -90,6 +98,11 @@ The system implements a strict hierarchical logic for member management:
 
 ### 项目简介
 **CMC 成员管理系统 (Members of CMC Management System)** 是一个用于管理 CMC 组织成员信息的全栈 Web 应用程序。它为管理员提供了一个高效的界面，用于追踪成员详情、管理考核分数、处理职位升降级以及可视化成员状态。
+
+### 架构与贡献者
+如需查看详细的系统架构图以及团队成员的贡献分布，请查看仓库中包含的交互式 HTML 文件：
+
+[查看架构与贡献者图谱](Architecture%20&%20Contributors.html)
 
 ### 快速开始
 
@@ -163,6 +176,8 @@ The system implements a strict hierarchical logic for member management:
     -   **面试分 (0-15)**: 入部时的初始评分。
     -   **实习分 (0-20)**: 实习期间的考核指标。
     -   **工分 (0-5500)**: 正式成员的主要贡献度量指标。
+
+
 
 ---
 
