@@ -13,11 +13,7 @@
 ### Architecture & Contributors
 For a detailed view of the system architecture and the contribution map of our team members, please view the interactive HTML file included in the repository:
 
-[View Architecture & Contributors Map](Architecture%20&%20Contributors.html)
-
-> **Note**: GitHub displays HTML files as source code by default. To view the rendered interactive map:
-> 1. **Download** the file and open it locally in your browser.
-> 2. Or, enable **[GitHub Pages](https://pages.github.com/)** in your repository settings to host it as a live webpage.
+[View Architecture & Contributors Map](https://ghost-king-gk.github.io/Members_of_CMC_Management_System/Architecture%20&%20Contributors.html)
 
 
 ### Getting Started
@@ -108,11 +104,7 @@ The system implements a strict hierarchical logic for member management:
 ### 架构与贡献者
 如需查看详细的系统架构图以及团队成员的贡献分布，请查看仓库中包含的交互式 HTML 文件：
 
-[查看架构与贡献者图谱](Architecture%20&%20Contributors.html)
-
-> **注意**：GitHub 默认会显示 HTML 源代码。要查看渲染后的交互式图谱：
-> 1. 请**下载**该文件并在浏览器中打开。
-> 2. 或者，在仓库设置中开启 **[GitHub Pages](https://pages.github.com/)** 功能将其作为网页托管。
+[查看架构与贡献者图谱](https://ghost-king-gk.github.io/Members_of_CMC_Management_System/Architecture%20&%20Contributors.html)
 
 ### 快速开始
 
