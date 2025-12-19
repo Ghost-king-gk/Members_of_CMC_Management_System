@@ -15,6 +15,11 @@ For a detailed view of the system architecture and the contribution map of our t
 
 [View Architecture & Contributors Map](Architecture%20&%20Contributors.html)
 
+> **Note**: GitHub displays HTML files as source code by default. To view the rendered interactive map:
+> 1. **Download** the file and open it locally in your browser.
+> 2. Or, enable **[GitHub Pages](https://pages.github.com/)** in your repository settings to host it as a live webpage.
+
+
 ### Getting Started
 
 #### Prerequisites
@@ -91,6 +96,7 @@ The system implements a strict hierarchical logic for member management:
 
 
 
+
 ---
 
 <a name="chinese"></a>
@@ -103,6 +109,10 @@ The system implements a strict hierarchical logic for member management:
 如需查看详细的系统架构图以及团队成员的贡献分布，请查看仓库中包含的交互式 HTML 文件：
 
 [查看架构与贡献者图谱](Architecture%20&%20Contributors.html)
+
+> **注意**：GitHub 默认会显示 HTML 源代码。要查看渲染后的交互式图谱：
+> 1. 请**下载**该文件并在浏览器中打开。
+> 2. 或者，在仓库设置中开启 **[GitHub Pages](https://pages.github.com/)** 功能将其作为网页托管。
 
 ### 快速开始
 
@@ -176,6 +186,7 @@ The system implements a strict hierarchical logic for member management:
     -   **面试分 (0-15)**: 入部时的初始评分。
     -   **实习分 (0-20)**: 实习期间的考核指标。
     -   **工分 (0-5500)**: 正式成员的主要贡献度量指标。
+
 
 
 
