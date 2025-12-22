@@ -1,5 +1,10 @@
 package nuist.ghost.demo3.controller;
-
+/**
+ * @author Chuhang 张初航
+ * @description Provide all the API for front-end
+ *              to manage members, including exporting data,
+ *              All of the controller classes are defined in this package
+ */
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

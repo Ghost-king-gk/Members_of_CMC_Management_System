@@ -1,7 +1,9 @@
 package nuist.ghost.demo3.controller;
 /**
  * @author Chuhang 张初航
- * @discription 管理员成员管理控制器 provide all the API for front-end
+ * @description Provide all the API for front-end
+ *              to manage members, including exporting data,
+ *              All of the controller classes are defined in this package
  */
 
 import nuist.ghost.demo3.service.MemberService;

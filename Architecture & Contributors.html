@@ -37,6 +37,20 @@
             letter-spacing: 1px;
         }
 
+        .hint {
+            margin: -20px 0 30px;
+            max-width: 1400px;
+            width: 100%;
+            background: var(--card-bg);
+            border: 1px solid var(--color-ai);
+            color: var(--color-ai);
+            padding: 10px 14px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            font-size: 0.9rem;
+            letter-spacing: 0.2px;
+        }
+
         .legend {
             display: flex;
             gap: 20px;
@@ -59,6 +73,17 @@
             transition: opacity 0.3s;
         }
 
+        .click-badge {
+            margin-left: 6px;
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 999px;
+            border: 1px dashed var(--color-ai);
+            color: var(--color-ai);
+            background: rgba(249,226,175,0.08);
+            line-height: 1.2;
+        }
+
         .legend-item:hover, .legend-item.active {
             opacity: 1;
             font-weight: bold;
@@ -68,6 +93,10 @@
             width: 12px;
             height: 12px;
             border-radius: 50%;
+        }
+
+        .dot-mixed {
+            background: linear-gradient(to bottom, var(--color-chuhang), var(--color-xuyang));
         }
 
         .container {
@@ -105,6 +134,7 @@
             padding: 15px;
             border-radius: 8px;
             border-left: 5px solid transparent;
+            border-image: linear-gradient(to bottom, var(--color-chuhang), var(--accent-color, var(--color-chuhang))) 1 100%;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             transition: transform 0.3s, box-shadow 0.3s;
             position: relative;
@@ -136,6 +166,49 @@
             background: rgba(255,255,255,0.1);
         }
 
+        .author-row {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+            width: 100%;
+            flex-wrap: nowrap;
+        }
+
+        .author-col {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .author-secondary {
+            margin-left: auto;
+        }
+
+        .author-col .author-secondary {
+            margin-left: 0;
+            align-self: flex-end;
+        }
+
+        .contrib-bar {
+            display: flex;
+            width: 100%;
+            height: 8px;
+            border-radius: 999px;
+            overflow: hidden;
+            margin-top: 10px;
+            background: rgba(255,255,255,0.06);
+        }
+
+        .contrib-bar .lead {
+            flex: var(--lead-flex, 4);
+            background: var(--color-chuhang);
+        }
+
+        .contrib-bar .support {
+            flex: var(--support-flex, 1);
+            background: var(--accent-color, var(--arrow-color));
+        }
+
         /* Connections (SVG) */
         #connections {
             position: absolute;
@@ -156,28 +229,26 @@
         }
 
         /* Specific Author Styles */
-        .author-chuhang { border-color: var(--color-chuhang); }
+        .author-chuhang { --accent-color: var(--color-chuhang); }
         .author-chuhang .author-tag { color: var(--color-chuhang); }
         
-        .author-xuyang { border-color: var(--color-xuyang); }
+        .author-xuyang { --accent-color: var(--color-xuyang); }
         .author-xuyang .author-tag { color: var(--color-xuyang); }
 
-        .author-kaicai { border-color: var(--color-kaicai); }
+        .author-kaicai { --accent-color: var(--color-kaicai); }
         .author-kaicai .author-tag { color: var(--color-kaicai); }
 
-        .author-ximing { border-color: var(--color-ximing); }
+        .author-ximing { --accent-color: var(--color-ximing); }
         .author-ximing .author-tag { color: var(--color-ximing); }
 
         /* Mixed Authors */
         .author-mixed { 
-            border-left-width: 5px;
-            border-image: linear-gradient(to bottom, var(--color-chuhang), var(--color-xuyang)) 1 100%;
+            --accent-color: var(--color-xuyang);
         }
 
         /* Frontend Special */
         .author-frontend {
-            border-left-width: 5px;
-            border-image: linear-gradient(to bottom, var(--color-chuhang), var(--color-ai)) 1 100%;
+            --accent-color: var(--color-ai);
         }
 
     </style>
@@ -186,21 +257,28 @@
 
     <h1>System Architecture & Contributors</h1>
 
+    <div class="hint">Tip: Click a role below to highlight its modules; click again to clear.</div>
+
     <div class="legend">
         <div class="legend-item" data-author="chuhang" onclick="highlight('chuhang')">
-            <div class="dot" style="background: var(--color-chuhang)"></div> Chuhang Zhang (Controller/Framework)
+            <div class="dot dot-mixed"></div> Chuhang Zhang (Controller/Framework)
+            <span class="click-badge">Clickable</span>
         </div>
         <div class="legend-item" data-author="xuyang" onclick="highlight('xuyang')">
-            <div class="dot" style="background: var(--color-xuyang)"></div> Xuyang Zhou (Service Logic/Algo)
+            <div class="dot dot-mixed"></div> Xuyang Zhou (Service Logic/Algo)
+            <span class="click-badge">Clickable</span>
         </div>
         <div class="legend-item" data-author="kaicai" onclick="highlight('kaicai')">
-            <div class="dot" style="background: var(--color-kaicai)"></div> Kai Cai (Repository/Data)
+            <div class="dot dot-mixed"></div> Kai Cai (Repository/Data)
+            <span class="click-badge">Clickable</span>
         </div>
         <div class="legend-item" data-author="ximing" onclick="highlight('ximing')">
-            <div class="dot" style="background: var(--color-ximing)"></div> Ximing Chen (Entities/Exception)
+            <div class="dot dot-mixed"></div> Ximing Chen (Entities/DTO)
+            <span class="click-badge">Clickable</span>
         </div>
         <div class="legend-item" data-author="ai" onclick="highlight('ai')">
-            <div class="dot" style="background: var(--color-ai)"></div> AI Tutors (Guidance)
+            <div class="dot dot-mixed"></div> AI Tutors (Guidance)
+            <span class="click-badge">Clickable</span>
         </div>
     </div>
 
@@ -214,9 +292,13 @@
             <div class="node author-frontend" id="frontend">
                 <h3>SPA Frontend</h3>
                 <p>HTML5 / CSS3 / Vanilla JS</p>
-                <div style="display: flex; flex-direction: column; gap: 2px;">
+                <div class="author-col">
                     <span class="author-tag" style="color: var(--color-chuhang)">Chuhang Zhang (Frontend Freshman)</span>
-                    <span class="author-tag" style="color: var(--color-ai)">Gemini/ChatGPT/Deepseek/Lingma (Guidance)</span>
+                    <span class="author-tag author-secondary" style="color: var(--color-ai)">Gemini/ChatGPT/Deepseek/Lingma (Guidance)</span>
+                </div>
+                <div class="contrib-bar" aria-label="Lead and support indicator">
+                    <div class="lead"></div>
+                    <div class="support"></div>
                 </div>
             </div>
         </div>
@@ -231,16 +313,23 @@
                 <span class="author-tag">Chuhang Zhang</span>
             </div>
 
-            <div class="node author-chuhang" id="dto">
+            <div class="node author-ximing" id="dto">
                 <h3>DTOs</h3>
                 <p>Create/Update Requests</p>
-                <span class="author-tag">Chuhang Zhang</span>
+                <div class="author-row">
+                    <span class="author-tag" style="color: var(--color-chuhang)">Chuhang Zhang</span>
+                    <span class="author-tag author-secondary" style="color: var(--color-ximing)">Ximing Chen</span>
+                </div>
+                <div class="contrib-bar" aria-label="Lead and support indicator" style="--lead-flex: 50; --support-flex: 50;">
+                    <div class="lead"></div>
+                    <div class="support"></div>
+                </div>
             </div>
             
-            <div class="node author-ximing" id="exception">
+            <div class="node author-chuhang" id="exception">
                 <h3>GlobalExceptionHandler</h3>
                 <p>Centralized Error Handling</p>
-                <span class="author-tag">Ximing Chen</span>
+                <span class="author-tag">Chuhang Zhang</span>
             </div>
         </div>
 
@@ -251,22 +340,40 @@
             <div class="node author-mixed" id="service">
                 <h3>MemberService</h3>
                 <p>Core Business Logic</p>
-                <div style="display: flex; gap: 5px;">
+                <div class="author-row">
                     <span class="author-tag" style="color: var(--color-chuhang)">Chuhang (Frame)</span>
-                    <span class="author-tag" style="color: var(--color-xuyang)">Xuyang (Func)</span>
+                    <span class="author-tag author-secondary" style="color: var(--color-xuyang)">Xuyang (Func)</span>
+                </div>
+                <div class="contrib-bar" aria-label="Lead and support indicator">
+                    <div class="lead"></div>
+                    <div class="support"></div>
                 </div>
             </div>
 
             <div class="node author-xuyang" id="sortutils">
                 <h3>SortUtils</h3>
                 <p>QuickSort Algorithm</p>
-                <span class="author-tag">Xuyang Zhou</span>
+                <div class="author-row">
+                    <span class="author-tag" style="color: var(--color-chuhang)">Chuhang Zhang</span>
+                    <span class="author-tag author-secondary">Xuyang Zhou</span>
+                </div>
+                <div class="contrib-bar" aria-label="Lead and support indicator" style="--lead-flex: 68; --support-flex: 32;">
+                    <div class="lead"></div>
+                    <div class="support"></div>
+                </div>
             </div>
             
             <div class="node author-kaicai" id="init">
                 <h3>DataInitializer</h3>
                 <p>Sample Data Generation</p>
-                <span class="author-tag">Kai Cai</span>
+                <div class="author-row">
+                    <span class="author-tag" style="color: var(--color-chuhang)">Chuhang Zhang</span>
+                    <span class="author-tag author-secondary">Kai Cai</span>
+                </div>
+                <div class="contrib-bar" aria-label="Lead and support indicator" style="--lead-flex: 55; --support-flex: 45;">
+                    <div class="lead"></div>
+                    <div class="support"></div>
+                </div>
             </div>
         </div>
 
@@ -277,7 +384,14 @@
             <div class="node author-kaicai" id="repository">
                 <h3>MemberRepository</h3>
                 <p>In-Memory Storage & CRUD</p>
-                <span class="author-tag">Kai Cai</span>
+                <div class="author-row">
+                    <span class="author-tag" style="color: var(--color-chuhang)">Chuhang Zhang</span>
+                    <span class="author-tag author-secondary">Kai Cai</span>
+                </div>
+                <div class="contrib-bar" aria-label="Lead and support indicator" style="--lead-flex: 65; --support-flex: 35;">
+                    <div class="lead"></div>
+                    <div class="support"></div>
+                </div>
             </div>
 
             <div class="node author-chuhang" id="jsonutils">
@@ -289,7 +403,14 @@
             <div class="node author-ximing" id="entity">
                 <h3>Entities</h3>
                 <p>Member, President, etc.</p>
-                <span class="author-tag">Ximing Chen</span>
+                <div class="author-row">
+                    <span class="author-tag" style="color: var(--color-chuhang)">Chuhang Zhang</span>
+                    <span class="author-tag author-secondary">Ximing Chen</span>
+                </div>
+                <div class="contrib-bar" aria-label="Lead and support indicator">
+                    <div class="lead"></div>
+                    <div class="support"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -385,6 +506,9 @@
 
                 // Logic for mixed nodes
                 let match = false;
+
+                // Since Chuhang Zhang is listed on every node, selecting him highlights all.
+                if (author === 'chuhang') match = true;
                 if (node.classList.contains(`author-${author}`)) match = true;
                 
                 // Handle mixed ownership

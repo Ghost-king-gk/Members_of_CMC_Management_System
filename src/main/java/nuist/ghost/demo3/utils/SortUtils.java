@@ -1,8 +1,8 @@
 package nuist.ghost.demo3.utils;
 /**
- * @discription 快速排序  A quick sort based on ID for a practice of algorithm
- * @author Xuyang Zhou
- *
+ * @author Chuhang Zhang 张初航
+ * @description package nuist.ghost.demo3.utils : utils package
+ *              All of utility classes are defined in this package
  */
 
 import java.util.ArrayList;
@@ -10,6 +10,12 @@ import java.util.List;
 import nuist.ghost.demo3.entities.Member;
 
 public class SortUtils {
+/**
+ * @discription 快速排序  A quick sort based on ID for a practice of algorithm
+ * @author Chuhang Zhang 张初航
+ * @author Xuyang Zhou 周徐旸
+ *
+ */
     private SortUtils(){
     }
 

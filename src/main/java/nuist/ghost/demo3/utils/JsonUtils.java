@@ -1,9 +1,8 @@
 package nuist.ghost.demo3.utils;
 /**
- * @author Chuhang Zhang
- * @date 2020/8/11
- * @description A set of utilities for JSON serialization and deserialization.
- *              Supported by Jackson library.
+ * @author Chuhang Zhang 张初航
+ * @description package nuist.ghost.demo3.utils : utils package
+ *              All of utility classes are defined in this package
  */
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -25,6 +24,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class JsonUtils {
+/**
+ * @author Chuhang Zhang
+ * @date 2020/8/11
+ * @description A set of utilities for JSON serialization and deserialization.
+ *              Supported by Jackson library.
+ */
     private static final ObjectMapper MAPPER = new ObjectMapper()
             .registerModule(new JavaTimeModule())
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);

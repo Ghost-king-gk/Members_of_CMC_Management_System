@@ -1,7 +1,8 @@
 package nuist.ghost.demo3.exception;
 /**
- * @author Ximing Chen 陈玺ming
- * @discription 全局异常处理
+ * @author Chuhang Zhang 张初航
+ * @discription Global Exception Handler for the application
+ *              All of the exception handler classes are defined in this package
  */
 
 import org.springframework.http.HttpStatus;

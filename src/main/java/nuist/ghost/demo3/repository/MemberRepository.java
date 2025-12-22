@@ -1,7 +1,8 @@
 package nuist.ghost.demo3.repository;
 /**
  * Store Member Info 储存成员信息
- * @author   Kai Cai 蔡凯
+ * @author  Chuhang Zhang 张初航
+ * @author  Kai Cai 蔡凯
  */
 
 import nuist.ghost.demo3.entities.Member;

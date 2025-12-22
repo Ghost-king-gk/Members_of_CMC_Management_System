@@ -1,4 +1,9 @@
 package nuist.ghost.demo3.utils;
+/**
+ * @author Chuhang Zhang 张初航
+ * @description package nuist.ghost.demo3.utils : utils package
+ *              All of utility classes are defined in this package
+ */
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

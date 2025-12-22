@@ -1,8 +1,8 @@
 package nuist.ghost.demo3.service;
 /**
  * @Service Layer for managing Member entities.
- * @author   Xuyang Zhou 周徐旸 for functions
- * @author   Chuhang Zhang 张初航 for framework
+ * @author  Chuhang Zhang 张初航 for framework
+ * @author  Xuyang Zhou 周徐旸 for switch-case structure
  * @description
  */
 

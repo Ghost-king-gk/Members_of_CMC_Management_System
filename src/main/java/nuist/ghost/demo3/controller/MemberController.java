@@ -1,4 +1,10 @@
 package nuist.ghost.demo3.controller;
+/**
+ * @author Chuhang 张初航
+ * @description Provide all the API for front-end
+ *              to manage members, including exporting data,
+ *              All of the controller classes are defined in this package
+ */
 
 import nuist.ghost.demo3.dto.CreateMemberRequest;
 import nuist.ghost.demo3.dto.UpdateMemberRequest;

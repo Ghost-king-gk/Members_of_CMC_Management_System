@@ -1,9 +1,10 @@
 package nuist.ghost.demo3.config;
 /**
- * @Author Kai Cai 蔡凯
- * @Description: 用于初始化测试数据的组件，从data/members.json文件中读取成员数据并保存到数据库中
- *               实现CommandLineRunner接口，在应用启动时执行数据初始化逻辑
- *               确保在项目根目录下有data/members.json文件，且格式正确
+ * @author Chuhang Zhang 张初航
+ * @author Kai Cai 蔡凯
+ * @Description: Utility component for data initialization from data/members.json file. 
+ *               Command line runner will run after the spring boot application starts
+ *               ensure data/members.json file exists in the root directory of the project with correct format
  */
 
 import nuist.ghost.demo3.entities.Member;
